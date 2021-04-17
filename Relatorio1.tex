@@ -1,0 +1,304 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage[normalem]{ulem}
+\usepackage{soul}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{extarrows}
+\usepackage{graphicx}
+\usepackage[backend=biber,
+style=numeric,
+sorting=none,
+isbn=false,
+doi=false,
+url=false,
+]{biblatex}\addbibresource{bibliography-biblatex.bib}
+
+\usepackage{subfig}
+\usepackage{wrapfig}
+\usepackage{wasysym}
+\usepackage{enumitem}
+\usepackage{adjustbox}
+\usepackage{ragged2e}
+\usepackage[svgnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage{longtable}
+\usepackage{changepage}
+\usepackage{setspace}
+\usepackage{hhline}
+\usepackage{multicol}
+\usepackage{tabto}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{fancyhdr}
+\usepackage[toc,page]{appendix}
+\usepackage[hidelinks]{hyperref}
+\usetikzlibrary{shapes.symbols,shapes.geometric,shadows,arrows.meta}
+\tikzset{>={Latex[width=1.5mm,length=2mm]}}
+\usepackage{flowchart}\usepackage[paperheight=11.69in,paperwidth=8.27in,left=1.18in,right=1.18in,top=1.47in,bottom=1.47in,headheight=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\TabPositions{0.5in,1.0in,1.5in,2.0in,2.5in,3.0in,3.5in,4.0in,4.5in,5.0in,5.5in,}
+
+\urlstyle{same}
+
+\renewcommand{\_}{\kern-1.5pt\textunderscore\kern-1.5pt}
+
+ %%%%%%%%%%%%  Set Depths for Sections  %%%%%%%%%%%%%%
+
+% 1) Section
+% 1.1) SubSection
+% 1.1.1) SubSubSection
+% 1.1.1.1) Paragraph
+% 1.1.1.1.1) Subparagraph
+
+
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+
+ %%%%%%%%%%%%  Set Depths for Nested Lists created by \begin{enumerate}  %%%%%%%%%%%%%%
+
+
+\setlistdepth{9}
+\renewlist{enumerate}{enumerate}{9}
+		\setlist[enumerate,1]{label=\arabic*)}
+		\setlist[enumerate,2]{label=\alph*)}
+		\setlist[enumerate,3]{label=(\roman*)}
+		\setlist[enumerate,4]{label=(\arabic*)}
+		\setlist[enumerate,5]{label=(\Alph*)}
+		\setlist[enumerate,6]{label=(\Roman*)}
+		\setlist[enumerate,7]{label=\arabic*}
+		\setlist[enumerate,8]{label=\alph*}
+		\setlist[enumerate,9]{label=\roman*}
+
+\renewlist{itemize}{itemize}{9}
+		\setlist[itemize]{label=$\cdot$}
+		\setlist[itemize,1]{label=\textbullet}
+		\setlist[itemize,2]{label=$\circ$}
+		\setlist[itemize,3]{label=$\ast$}
+		\setlist[itemize,4]{label=$\dagger$}
+		\setlist[itemize,5]{label=$\triangleright$}
+		\setlist[itemize,6]{label=$\bigstar$}
+		\setlist[itemize,7]{label=$\blacklozenge$}
+		\setlist[itemize,8]{label=$\prime$}
+
+
+
+ %%%%%%%%%%%%  Header here  %%%%%%%%%%%%%%
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{ 		\includegraphics[width=2.64in,height=0.83in]{./media/image1.png}
+
+\vspace{\baselineskip}
+}
+\lfoot{ }
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\topsep}{0pt}\setlength{\parskip}{8.04pt}
+\setlength{\parindent}{0pt}
+
+ %%%%%%%%%%%%  This sets linespacing (verticle gap between Lines) Default=1 %%%%%%%%%%%%%%
+
+
+\renewcommand{\arraystretch}{1.3}
+
+
+%%%%%%%%%%%%%%%%%%%% Document code starts here %%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{document}
+
+\vspace{\baselineskip}
+
+
+%%%%%%%%%%%%%%%%%%%% Figure/Image No: 1 starts here %%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[H]
+	\begin{Center}
+		\includegraphics[width=4.88in,height=1.53in]{./media/image1.png}
+	\end{Center}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%% Figure/Image No: 1 Ends here %%%%%%%%%%%%%%%%%%%%
+
+
+\vspace{\baselineskip}
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+\begin{Center}
+{\fontsize{24pt}{28.8pt}\selectfont \textbf{E-Stafetas - transportes de mercadorias em veículos elétricos Parte I}}
+\end{Center}
+\begin{Center}
+{\fontsize{20pt}{24.0pt}\selectfont Conceção e Análise de Algoritmos\ \ \   2020/2021}
+\end{Center}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+\begin{adjustwidth}{0.25in}{0.0in}
+\begin{Center}
+{\fontsize{16pt}{19.2pt}\selectfont \textbf{Grupo 3 Turma 2}}
+\end{Center}
+\end{adjustwidth}
+
+\begin{adjustwidth}{0.25in}{0.0in}
+{\fontsize{15pt}{18.0pt}\selectfont Marcelo Couto\tab \tab \tab \ \ \ \ \  up201906086@edu.fe.up.pt}
+\end{adjustwidth}
+
+\begin{adjustwidth}{0.25in}{-0.0in}
+{\fontsize{15pt}{18.0pt}\selectfont Afonso Cabral de Carvalho \tab \ \ \ \ \  up201807481@edu.fe.up.pt}
+\end{adjustwidth}
+
+\begin{adjustwidth}{0.25in}{0.0in}
+{\fontsize{15pt}{18.0pt}\selectfont João Rodrigo \tab \tab \tab \ \ \ \ \  up201705110@edu.fe.up.pt}
+\end{adjustwidth}
+
+
+\vspace{\baselineskip}
+\begin{Center}
+{\fontsize{16pt}{19.2pt}\selectfont 16 de Abril de 2021}
+\end{Center}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+{\fontsize{20pt}{24.0pt}\selectfont \textbf{Índice}}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+{\fontsize{20pt}{24.0pt}\selectfont \textbf{1. Descrição do Problema}}
+{\fontsize{16pt}{19.2pt}\selectfont 1.1 Introdução}
+Uma empresa de entrega de mercadorias ao domicílio pretende implementar um sistema capaz de gerir as rotas dos seus veículos. O tema deste projeto deriva o seu nome dos veículos elétricos que a empresa pretende utilizar nas entregas. Por este motivo, é preciso considerar diversos fatores que tornam esta uma situação diferente do usual, principalmente relacionados com a autonomia dos veículos.
+{\fontsize{16pt}{19.2pt}\selectfont 1.2 Entrega}
+Os veículos terão que diariamente realizar múltiplas entregas. Cada entrega resume-se a dois passos:
+\begin{itemize}
+	\item Recolha do(s) produto(s) na loja ou centro de recolha
+	\item Entrega do(s) produto(s) na morada correspondente
+\end{itemize}
+{\fontsize{16pt}{19.2pt}\selectfont 1.3 Problema da Autonomia}
+Para além disto, é necessário ter em conta a autonomia do veículo. Este fator restringe as rotas que poderão ser tomadas entre os pontos de interesse referidos anteriormente. Como solução são nos propostas duas estratégias diferentes. A primeira resume-se a que, sempre que um veículo não tenha autonomia suficiente, o caminho para a entrega deverá passar pela sede da empresa, de modo que este seja recarregado aí. A outra estratégia implica o cálculo de um caminho que passe por um dos múltiplos pontos de recarga que poderão estar espalhados pelo mapa. De certa forma, a primeira estratégia resume-se a uma situação específica da segunda, em que o ponto de recarga é único e coincide com a garagem da empresa.
+{\fontsize{16pt}{19.2pt}\selectfont 1.4 Problema da Imprevisibilidade}
+Um outro problema com o qual é necessário lidar é o da imprevisibilidade do estado de um dado caminho. A qualquer altura, obras na via, acidentes e outros eventos semelhantes podem tornar um certo caminho impossível, levando à necessidade de recalcular os caminhos mais curtos ou de rotular a entrega impossível nas condições desse dado momento.
+{\fontsize{16pt}{19.2pt}\selectfont 1.5 Otimização das Viagens}
+Como o número de veículos que a empresa tem disponíveis para realizar as entregas é reduzido, é necessário otimizar o seu uso.
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+{\fontsize{20pt}{24.0pt}\selectfont \textbf{2. Formalização do Problema}}
+{\fontsize{16pt}{19.2pt}\selectfont 2.1 Input Data}
+G = (V, A) – grafo pesado dirigido representativo do mapa, composto por Vértices e Arestas
+\begin{itemize}
+	\item V – conjunto dos vértices (representam \uline{pontos de interesse} ou simplesmente pontos da rede viária) (V(i) é o i-ésimo elemento)
+\begin{itemize}
+	\item Adj $ \subseteq $  A – arestas que partem do vértice
+	\item lat – latitude do ponto no mapa real
+	\item long – longitude do ponto no mapa real
+
+\end{itemize}
+	\item A – conjunto das arestas do grafo (representam vias e estradas) (A(i) é o i-ésimo elemento)
+\begin{itemize}
+	\item w – peso da aresta (representa a distância da via)
+	\item dest $ \in $  V – vértice de destino da aresta
+	\item orig $ \in $  V – vértice de origem da aresta
+\end{itemize}
+\end{itemize}
+\uline{Pontos de interesse} (vértices especiais)
+\begin{itemize}
+	\item s $ \in $  V – sede/garagem da empresa
+	\item pr $ \in $  V – ponto de recarga
+	\item lr $ \in $  V – local de recolha de encomenda
+	\item le $ \in $  V – local de entrega da encomenda
+\end{itemize}
+
+\vspace{\baselineskip}
+Ve – conjunto dos veículos pertencentes à frota da empresa (Ve(i) é o i-ésimo elemento)
+\begin{itemize}
+	\item aut – autonomia, em km
+
+\vspace{\baselineskip}
+En – conjunto de encomendas (En(i) é o i-ésimo elemento)
+	\item le – local de entrega da encomenda
+	\item lr – local de recolha da encomenda
+\end{itemize}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+\begin{enumerate}[label*={\fontsize{16pt}{16pt}\selectfont \arabic*.}]
+	\item {\fontsize{16pt}{19.2pt}\selectfont Output Data}
+\end{enumerate}
+Para cada veículo, é retornado um caminho Cam, que representa o melhor caminho (em termos de distância percorrida) para realizar as recolhas e entregas EnV que lhe foram atribuídas.
+Para cada veículo
+\begin{itemize}
+	\item Cam – sequência de nós que representa o melhor caminho para um dado veículo (Cam(i) é o i-ésimo elemento, Cam(i) $ \in $  V)
+\end{itemize}
+\begin{itemize}
+	\item EnV – conjunto de entregas das quais um veículo ficou encarregue (EnV(i) é o i-ésimo elemento)
+\end{itemize}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+\printbibliography
+\end{document}
