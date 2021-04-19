@@ -15,8 +15,8 @@
 % Date
 \date{16 of April, 2021}
 % Title
-\title{\Huge{\textbf{E-Stafetas - merchandise delivery by electrical vehicles}
-\LARGE{ Conceção e Análise de Algoritmos - Part I }}}
+\title{\Huge{\textbf{E-Stafetas - merchandise delivery by electrical vehicles \\
+\Large{ Conceção e Análise de Algoritmos - Part I }}}}
 % Author
 \author{
 \Large{Class 3 group 2} \vspace{0.5em} \\
@@ -35,96 +35,17 @@
 \maketitle
 
 \newpage
-\textbf{\huge Index} \\
-
-
-\newpage
-\section{Problem Description}
-
-
-\subsection{Introduction}
-A home delivery company, motivated by the rise in online sales and the increasing necessity to preserve our planet, decided to invest in electrical vehicles to perform its deliveries. For the idea to work, a system to manage the routs of the vehicles must be implemented. The system must have more factors into account than usual, given these vehicles' more restricted range and the difference in the fuelling process.
-
-
-\subsection{Delivery}
-Each vehicle from the company's fleet has to perform multiple deliveries daily. Each delivery can be summed up to three steps:
-\begin{itemize}
-	\item Picking up the product(s) from the pick up point
-	\item (optional) Recharge the vehicle in a recharge  or in the enterprise's garage
-	\item Delivery of those same product(s) on the client's address
-\end{itemize}
-
-
-\subsection{Autonomy Problem}
-Given the reduced distances the electrical vehicles are capable of covering with 'full tank' in comparison to a traditional petrol fuelled car, the autonomy is an important factor when calculating the optimal itinerary for the vehicle. There are two strategies available for when a vehicle does not have enough fuel to perform a delivery:
-\begin{itemize}
-    \item The route must go through the company's  garage so that the vehicle can recharge there
-    \item The route must go through one of many recharge points scattered throughout the map
-\end{itemize}
-In a way, the first strategy is simply a special case of the second one, where the recharge point is unique and happens to be in the garage's location.
-
-
-\subsection{Unpredictability problem}
-Another problem which needs to be tackled in the route calculation phase is the one of the unexpected events that might change the availability of certain roads and paths. At any given time, there may be accidents on the vehicle accidents or road works that block the passage on certain spots that could be part of the optimal path. This demands a recalculation of the itinerary daily and it might even, in rare cases, deem the delivery impossible for the moment.
-
-
-\subsection{Trip optimization}
-Due to the reduced amount of vehicles available for the delivery, these must be intelligently distributed through the drivers to make the usage of the vehicles the most efficient possible.
-
+\input{Index.tex}
 
 \newpage
-\section{Problem Formalization}
+\input{ProblemDescription.tex}
+
+\newpage
+\input{ProblemFormalization.tex}
 
 
-% Input
-\subsection{Input Data}
-The geographical information will be loaded in the form of a map, obtained in OpenStreetMap and converted to a graph.
-\paragraph{G = (N, E)} - weighted directed graph that represents the map. It is composed by Nodes and Edges
-\begin{itemize}
-
-	\item N - set of Nodes (a node represents a \uline{interest point} or simply a point in the road network) (N(i) is the ith element). For each node:
-\begin{itemize}
-	\item Adj $ \subseteq $  E - edges whose origin is N(i)
-	\item lat - the latitude of the point it represents in the map
-	\item long - the longitude of the point it represents in the map
-\end{itemize}
-
-	\item A - set of Edges (an edge represents a way/street/road) (E(i) is the ith element). For each edge:
-\begin{itemize}
-	\item w - weight (represents the length of the way)
-	\item dest $ \in $  N - origin node of the edge
-	\item orig $ \in $  V - destination node of the edge
-\end{itemize}
-
-\end{itemize}
-
-\uline{Interest Points} (special nodes)
-\begin{itemize}
-	\item gar $ \in $  N - base/garage of the company
-	\item rp $ \in $  N - recharge points
-	\item pup $ \in $  N - pick up point
-	\item dp $ \in $  N - delivery point
-\end{itemize}
-
-\paragraph{V} - set of vehicles that make the fleet of the company (Ve(i) is the ith element). For each vehicle:
-\begin{itemize}
-	\item range - current range of the vehicle
-\end{itemize}
-
-\paragraph{Or} - set of orders for the day (Or(i) is the ith element). For each order:
-\begin{itemize}
-    \item pup $ \in $  N - pick up point
-	\item dp $ \in $  N - delivery point
-\end{itemize}
 
 
-%Output
-\subsection{Output Data}
-Each vehicle is assigned a \textit{path} that represents the best sequence of nodes for the orders \textit{OrV} he's been assigned to. The path and orders are distributed taking to account the optimization of the distance travelled and the range of each vehicle at any given time.
-For each Vehicle V(i):
-\begin{itemize}
-	\item path – sequence of nodes that represents the path to be taken by a vehicle on a day (path(i) is the ith element, path(i) $ \in $  V)
-	\item OrV – set of orders assigned to the vehicle (OrV(i) is the ith element)
-\end{itemize}
+
 
 \end{document}

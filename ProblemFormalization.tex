@@ -1,0 +1,53 @@
+\section{Problem Formalization}
+
+
+% Input
+\subsection{Input Data}
+The geographical information will be loaded in the form of a map, obtained in OpenStreetMap and converted to a graph.
+\paragraph{G = (N, E)} - weighted directed graph that represents the map. It is composed by Nodes and Edges
+\begin{itemize}
+
+	\item N - set of Nodes (a node represents a \uline{interest point} or simply a point in the road network) (N(i) is the ith element). For each node:
+\begin{itemize}
+	\item Adj $ \subseteq $  E - edges whose origin is N(i)
+	\item lat - the latitude of the point it represents in the map
+	\item long - the longitude of the point it represents in the map
+\end{itemize}
+
+	\item A - set of Edges (an edge represents a way/street/road) (E(i) is the ith element). For each edge:
+\begin{itemize}
+	\item w - weight (represents the length of the way)
+	\item dest $ \in $  N - origin node of the edge
+	\item orig $ \in $  V - destination node of the edge
+\end{itemize}
+
+\end{itemize}
+
+\uline{Interest Points} (special nodes)
+\begin{itemize}
+	\item gar $ \in $  N - base/garage of the company
+	\item rp $ \in $  N - recharge points
+	\item pup $ \in $  N - pick up point
+	\item dp $ \in $  N - delivery point
+\end{itemize}
+
+\paragraph{V} - set of vehicles that make the fleet of the company (Ve(i) is the ith element). For each vehicle:
+\begin{itemize}
+	\item range - current range of the vehicle
+\end{itemize}
+
+\paragraph{Or} - set of orders for the day (Or(i) is the ith element). For each order:
+\begin{itemize}
+    \item pup $ \in $  N - pick up point
+	\item dp $ \in $  N - delivery point
+\end{itemize}
+
+
+%Output
+\subsection{Output Data}
+Each vehicle is assigned a \textit{path} that represents the best sequence of nodes for the orders \textit{OrV} he's been assigned to. The path and orders are distributed taking to account the optimization of the distance travelled and the range of each vehicle at any given time.
+For each Vehicle V(i):
+\begin{itemize}
+	\item path – sequence of nodes that represents the path to be taken by a vehicle on a day (path(i) is the ith element, path(i) $ \in $  V)
+	\item OrV – set of orders assigned to the vehicle (OrV(i) is the ith element)
+\end{itemize}
