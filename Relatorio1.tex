@@ -1,6 +1,5 @@
 \documentclass[12pt]{article}
 
-
 \usepackage{geometry}
 \usepackage{ulem}
 \usepackage{import}
@@ -31,19 +30,21 @@
 % Other definitions
 \parindent=0pt
 
-\begin{document}
 
+\begin{document}
 \maketitle
 
 \newpage
-
 \textbf{\huge Index} \\
-\newpage
 
+
+\newpage
 \section{Problem Description}
+
 
 \subsection{Introduction}
 A home delivery company, motivated by the rise in online sales and the increasing necessity to preserve our planet, decided to invest in electrical vehicles to perform its deliveries. For the idea to work, a system to manage the routs of the vehicles must be implemented. The system must have more factors into account than usual, given these vehicles' more restricted range and the difference in the fuelling process.
+
 
 \subsection{Delivery}
 Each vehicle from the company's fleet has to perform multiple deliveries daily. Each delivery can be summed up to three steps:
@@ -53,6 +54,7 @@ Each vehicle from the company's fleet has to perform multiple deliveries daily. 
 	\item Delivery of those same product(s) on the client's address
 \end{itemize}
 
+
 \subsection{Autonomy Problem}
 Given the reduced distances the electrical vehicles are capable of covering with 'full tank' in comparison to a traditional petrol fuelled car, the autonomy is an important factor when calculating the optimal itinerary for the vehicle. There are two strategies available for when a vehicle does not have enough fuel to perform a delivery:
 \begin{itemize}
@@ -61,62 +63,68 @@ Given the reduced distances the electrical vehicles are capable of covering with
 \end{itemize}
 In a way, the first strategy is simply a special case of the second one, where the recharge point is unique and happens to be in the garage's location.
 
+
 \subsection{Unpredictability problem}
 Another problem which needs to be tackled in the route calculation phase is the one of the unexpected events that might change the availability of certain roads and paths. At any given time, there may be accidents on the vehicle accidents or road works that block the passage on certain spots that could be part of the optimal path. This demands a recalculation of the itinerary daily and it might even, in rare cases, deem the delivery impossible for the moment.
+
 
 \subsection{Trip optimization}
 Due to the reduced amount of vehicles available for the delivery, these must be intelligently distributed through the drivers to make the usage of the vehicles the most efficient possible.
 
-\newpage
 
+\newpage
 \section{Problem Formalization}
+
 
 % Input
 \subsection{Input Data}
-The geographical information will be loaded in the form of a map, obtained in OpenStreetMap and converted to a graph. \\
-
-G = (N, E) - weighted directed graph that represents the map. It is composed by Nodes and Edges
+The geographical information will be loaded in the form of a map, obtained in OpenStreetMap and converted to a graph.
+\paragraph{G = (N, E)} - weighted directed graph that represents the map. It is composed by Nodes and Edges
 \begin{itemize}
 
-	\item N - set of Nodes (a node represents a \uline{interest point} or simpy a point in the road network (N(i) is the ith element). For each node:
+	\item N - set of Nodes (a node represents a \uline{interest point} or simply a point in the road network) (N(i) is the ith element). For each node:
 \begin{itemize}
 	\item Adj $ \subseteq $  E - edges whose origin is N(i)
 	\item lat - the latitude of the point it represents in the map
-	\item long - longitude do ponto no mapa real
+	\item long - the longitude of the point it represents in the map
 \end{itemize}
 
-	\item A - conjunto das arestas do grafo (representam vias e estradas) (A(i) é o i-ésimo elemento)
+	\item A - set of Edges (an edge represents a way/street/road) (E(i) is the ith element). For each edge:
 \begin{itemize}
-	\item w - peso da aresta (representa a distância da via)
-	\item dest $ \in $  V - vértice de destino da aresta
-	\item orig $ \in $  V - vértice de origem da aresta
+	\item w - weight (represents the length of the way)
+	\item dest $ \in $  N - origin node of the edge
+	\item orig $ \in $  V - destination node of the edge
 \end{itemize}
 
 \end{itemize}
 
-\uline{Pontos de interesse} (vértices especiais)
+\uline{Interest Points} (special nodes)
 \begin{itemize}
-	\item s $ \in $  V - sede/garagem da empresa
-	\item pr $ \in $  V - ponto de recarga
-	\item lr $ \in $  V - local de recolha de encomenda
-	\item le $ \in $  V - local de entrega da encomenda
+	\item gar $ \in $  N - base/garage of the company
+	\item rp $ \in $  N - recharge points
+	\item pup $ \in $  N - pick up point
+	\item dp $ \in $  N - delivery point
 \end{itemize}
 
-Ve - conjunto dos veículos pertencentes à frota da empresa (Ve(i) é o i-ésimo elemento)
+\paragraph{V} - set of vehicles that make the fleet of the company (Ve(i) is the ith element). For each vehicle:
 \begin{itemize}
-	\item aut - autonomia, em km
-    \item En - conjunto de encomendas (En(i) é o i-ésimo elemento)
-	\item le - local de entrega da encomenda
-	\item lr - local de recolha da encomenda
+	\item range - current range of the vehicle
 \end{itemize}
+
+\paragraph{Or} - set of orders for the day (Or(i) is the ith element). For each order:
+\begin{itemize}
+    \item pup $ \in $  N - pick up point
+	\item dp $ \in $  N - delivery point
+\end{itemize}
+
 
 %Output
 \subsection{Output Data}
-Para cada veículo, é retornado um caminho Cam, que representa o melhor caminho (em termos de distância percorrida) para realizar as recolhas e entregas EnV que lhe foram atribuídas.
-Para cada veículo:
+Each vehicle is assigned a \textit{path} that represents the best sequence of nodes for the orders \textit{OrV} he's been assigned to. The path and orders are distributed taking to account the optimization of the distance travelled and the range of each vehicle at any given time.
+For each Vehicle V(i):
 \begin{itemize}
-	\item Cam – sequência de nós que representa o melhor caminho para um dado veículo (Cam(i) é o i-ésimo elemento, Cam(i) $ \in $  V)
-	\item EnV – conjunto de entregas das quais um veículo ficou encarregue (EnV(i) é o i-ésimo elemento)
+	\item path – sequence of nodes that represents the path to be taken by a vehicle on a day (path(i) is the ith element, path(i) $ \in $  V)
+	\item OrV – set of orders assigned to the vehicle (OrV(i) is the ith element)
 \end{itemize}
 
 \end{document}
