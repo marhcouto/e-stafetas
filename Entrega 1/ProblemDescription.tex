@@ -1,11 +1,11 @@
-\section{Problem Description}
+\chapter{Problem Description}
 
 
-\subsection{Introduction}
+\section{Introduction}
 A home delivery company, motivated by the rise in online sales and the increasing necessity to preserve our planet, decided to invest in electrical vehicles to perform its deliveries. For the idea to work, a system to manage the routs of the vehicles must be implemented. The system must have more factors into account than usual, given these vehicles' more restricted range and the difference in the fuelling process.
 
 
-\subsection{Delivery}
+\section{Delivery}
 Each vehicle from the company's fleet has to perform multiple deliveries daily. Each delivery can be summed up to three steps:
 \begin{itemize}
 	\item Picking up the product(s) from the pick up point
@@ -14,7 +14,7 @@ Each vehicle from the company's fleet has to perform multiple deliveries daily. 
 \end{itemize}
 
 
-\subsection{Autonomy Problem}
+\section{Autonomy Problem}
 Given the reduced distances the electrical vehicles are capable of covering with 'full tank' in comparison to a traditional petrol fuelled car, the autonomy is an important factor when calculating the optimal itinerary for the vehicle. There are two strategies available for when a vehicle does not have enough fuel to perform a delivery:
 \begin{itemize}
     \item The route must go through the company's  garage so that the vehicle can recharge there
@@ -23,9 +23,9 @@ Given the reduced distances the electrical vehicles are capable of covering with
 In a way, the first strategy is simply a special case of the second one, where the recharge point is unique and happens to be in the garage's location.
 
 
-\subsection{Unpredictability problem}
+\section{Unpredictability problem}
 Another problem which needs to be tackled in the route calculation phase is the one of the unexpected events that might change the availability of certain roads and paths. At any given time, there may be accidents on the vehicle accidents or road works that block the passage on certain spots that could be part of the optimal path. This demands a recalculation of the itinerary daily and it might even, in rare cases, deem the delivery impossible for the moment.
 
 
-\subsection{Trip optimization}
+\section{Trip optimization}
 Due to the reduced amount of vehicles available for the delivery, these must be intelligently distributed through the drivers to make the usage of the vehicles the most efficient possible.

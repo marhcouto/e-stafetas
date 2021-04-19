@@ -1,8 +1,8 @@
-\section{Problem Formalization}
+\chapter{Problem Formalization}
 
 
 % Input
-\subsection{Input Data}
+\section{Input Data}
 The geographical information will be loaded in the form of a map, obtained in OpenStreetMap and converted to a graph.
 \paragraph{G = (N, E)} - weighted directed graph that represents the map. It is composed by Nodes and Edges
 \begin{itemize}
@@ -25,7 +25,7 @@ The geographical information will be loaded in the form of a map, obtained in Op
 
 \uline{Interest Points} (special nodes)
 \begin{itemize}
-	\item gar $ \in $  N - base/garage of the company
+	\item base $ \in $  N - base/garage of the company
 	\item rp $ \in $  N - recharge points
 	\item pup $ \in $  N - pick up point
 	\item dp $ \in $  N - delivery point
@@ -44,10 +44,15 @@ The geographical information will be loaded in the form of a map, obtained in Op
 
 
 %Output
-\subsection{Output Data}
+\section{Output Data}
 Each vehicle is assigned a \textit{path} that represents the best sequence of nodes for the orders \textit{OrV} he's been assigned to. The path and orders are distributed taking to account the optimization of the distance travelled and the range of each vehicle at any given time.
 For each Vehicle V(i):
 \begin{itemize}
 	\item path – sequence of nodes that represents the path to be taken by a vehicle on a day (path(i) is the ith element, path(i) $ \in $  V)
 	\item OrV – set of orders assigned to the vehicle (OrV(i) is the ith element)
 \end{itemize}
+
+
+%Restrictions
+\section{Restrictions}
+
