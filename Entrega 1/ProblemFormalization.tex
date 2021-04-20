@@ -128,4 +128,9 @@ For each Vehicle V(i):
 
 \section{Objective Function}
 
-The company's goal for this system is to optimize the use of their vehicles, which means minimizing the time it takes to perform all deliveries. Being $ f $ the function that represents the distance travelled by all vehicles, the objective is to minimize it. (to be completed, had some questions)
+The company's goal for this system is to optimize the use of their vehicles, which means reducing the distance travelled in total above all. Being $ f $ the function that represents the distance travelled by all vehicles, the objective is to minimize it:
+\[ f = \sum_{i=0}^n d_i \]
+\begin{itemize}
+    \item $ d_i $ being the distance travelled by a vehicle in a day (for all its orders)
+    \item $ n $ being the number of vehicles in the company's fleet
+\end{itemize}
