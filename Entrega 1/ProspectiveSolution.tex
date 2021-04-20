@@ -1,9 +1,24 @@
 \chapter{Prospective Solution}
 
-\paragraph {} Problems that are found across the iterations and respective way to solve them using algorithms.Pseudo-code and temporal complexity are also showed.
 
 \section{Pre-Processing of Input Data}
-Before going threw with the problem resolution and trying to find the shortest path for the vans, we need to process the graph, checking for any inaccessible vertices (blocked by construction) or (???? - Podemos/fazemos isto?) not using the ones that are too far away from the starting point and from the delivery points. The point of reducing the number of vertices and edges we analyse from the vertices is to enhance the temporal efficiency of all algorithms.
+Before going through with the problem resolution and trying to find the shortest path for the vehicles, we opt to pre-process the graph, discarding unnecessary nodes and edges. By reducing the number of nodes and edges we analyse we are able improve the temporal spacial efficiency of all other algorithms. 
+
+\subsection{Graph Pre-Processing}
+\begin{itemize}
+    \item evaluating the connectivity of the graph (algorithm described further ahead), therefore checking for any inaccessible nodes or blocked edges (result of accidents or road works) followed by removal of the irrelevant elements
+    \item 
+\end{itemize}
+
+\subsection{Order Pre-Processing}
+\begin{itemize}
+    \item check if any of the pick up or delivery point are not present in the map. If this is the case for any order, it must be removed
+\end{itemize}
+
+% Been trying to solve this problem in my head: how do we distribute the orders efficiently?
+% Also thinking of changing distance units to time units in vehicle and edges
+
+\section{}
 
 \section{First calculations for Shortest Path}
 Having the graph already pre processed it's time to calculate the shortest path between all the vertices so the map is all processed for the first time. This can be done either using the Bi-directional Dijkstra or Floyd-Warshall algorithm. 
