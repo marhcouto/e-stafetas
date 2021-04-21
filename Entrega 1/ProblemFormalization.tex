@@ -1,13 +1,16 @@
 \chapter{Problem Formalization}
 
 
+
 \section{Input Data}
+
 
 \subsubsection{Notes}
 \begin{itemize}
     \item The geographical information will be loaded in the form of a map, obtained in OpenStreetMap and converted to a graph
     \item The words 'street', 'road' and 'way' are used interchangeably
 \end{itemize}
+
 
 \subsubsection{Graph}
 \paragraph{G = (N, E)} - weighted directed (roads may be one way only) graph that represents the map. It is composed by Nodes and Edges
@@ -37,6 +40,7 @@
 	\item dp - delivery point
 \end{itemize}
 
+
 \subsubsection{Vehicles}
 \paragraph{V} - set of vehicles that make the fleet of the company (Ve(i) is the ith element). For each vehicle:
 \begin{itemize}
@@ -51,6 +55,7 @@
 \end{itemize}
 
 
+
 \section{Output Data}
 Each vehicle is assigned a \textit{path} that represents the best sequence of nodes for the orders \textit{Ov} he's been assigned to. The path and orders are distributed taking to account the optimization of the distance travelled and the range of each vehicle at any given time.
 For each Vehicle V(i):
@@ -60,9 +65,12 @@ For each Vehicle V(i):
 \end{itemize}
 
 
+
 \section{Restrictions}
 
+
 \subsection{Input Restrictions}
+
 \subsubsection{General}
 \begin{itemize}
     \item The sets' indexes are implicitly limited by their sizes and 0\\ \uline{Example:}
@@ -124,6 +132,7 @@ For each Vehicle V(i):
     \item $ Ov \subseteq O $
     \item $ \forall o \in Ov, o \in O$
 \end{itemize}
+
 
 
 \section{Objective Function}
