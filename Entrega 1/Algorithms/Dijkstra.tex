@@ -18,9 +18,9 @@
                         \STATE{$ path(n2) \gets n $}
                         \IF{$ n2 \in Q $}
                             \STATE{$ Insert(Q, (n2, dist(n2))) $}
-                        \ENDIF
                         \ELSE
                             \STATE{$ Decrease-Key(Q, (n2, dist(n2))) $} \Comment{function to decrease the key in Q}
+                        \ENDIF
                     \ENDIF
                 \ENDFOR
             \ENDWHILE

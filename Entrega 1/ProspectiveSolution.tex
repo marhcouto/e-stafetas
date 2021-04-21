@@ -101,10 +101,13 @@ Compared to normal Dijkstra there's a speedup of 2x. The processed area is 2.pi.
     \item Minimum distance to the origin or goal node from each of the graph's nodes (dist)
     \item Node that comes before it in its path (path)
     \item Two priority queues to hold the nodes to be processed next in each direction
-    \item Boolean to say if the
+    \item Way of search (way) (1 if it was encountered by forward search, 2 if it was encountered by backward search, 0 default)
 \end{itemize}
+
 \input{Algorithms/Bidirectional.tex}
 
+\subsubsection{Analysis}
+This algorithm basically performs two dijkstra algorithms: one starting from the initial node and going forward; another one starting from the ending node and going backward. Each time they cross, the distance LEAVING FOR LATER, HAVING MANY PROBLEMS
 
 \section{Shortest Path Between All Nodes}
 
