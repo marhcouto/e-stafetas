@@ -1,6 +1,5 @@
 \chapter{Prospective Solution}
 
-
 \section{Pre-Processing of Input Data}
 Before going through with the problem resolution and trying to find the shortest path for the vehicles, we opt to pre-process the graph, discarding unnecessary nodes and edges. By reducing the number of nodes and edges we analyse we are able improve the temporal spacial efficiency of all other algorithms. 
 
@@ -15,16 +14,113 @@ Before going through with the problem resolution and trying to find the shortest
     \item check if any of the pick up or delivery point are not present in the map. If this is the case for any order, it must be removed
 \end{itemize}
 
-% Been trying to solve this problem in my head: how do we distribute the orders efficiently?
-% Also thinking of changing distance units to time units in vehicle and edges
 
 \section{Problem Identification}
-With the graph and the orders pre-processed, there's now a need to find the most efficient way for the vans to reap the stores and deliver the items to costumers. As the vehicles are electric we need to worry about recharging station and how we integrate them in each vehicle path, if needed.
+
+With the graph and the orders pre-processed, there's now a need to find the most efficient way for the vehicles to pick up and deliver the costumers' orders. Before, we have divided the problem into four iterations, each one resembling the solution of a problem. 
+\begin{itemize}
+    \item \textbf{I} - Calculation of shortest paths
+    \item \textbf{II} -Evaluation of the graph's connectivity
+    \item \textbf{III} -Inclusion of recharging points in the paths as needed
+    \item \textbf{IV} -Distribution of the orders between the vehicles available to the company
+\end{itemize}
+
 
 \section{First calculations for Shortest Path}
-Having the graph already pre processed it's time to calculate the shortest path between all the vertices so the map is all processed for the first time. This can be done either using the Bi-directional Dijkstra or Floyd-Warshall algorithm. 
+
+Algorithms for the calculation of the Shortest Path are very important for the solution of this problem. They will be used to calculate the shortest path between multiple points when calculating a vehicle's path, such as the shortest path between the garage and a pick up point. To do this, there are many algorithms at our disposal. We will evaluate some of them and make a decision on which is(are) best for the situation at hand.
+
+\subsection{Dijkstra's Algorithm}
+\paragraph{Description}
+This algorithm was conceived by Edsger W. Dijkstra in 1956 and is used to calculate shortest paths in directed or undirected graphs, so long there are no edges with negative weight. Upon utilization of this algorithm, a tree holding the shortest paths from the origin node to all others is formed. For this algorithm to be implemented, extra data is required:
+\begin{itemize}
+    \item Minimum distance to the origin node from each of the graph's nodes (dist)
+    \item Node that comes before it in its path (path)
+    \item Priority queue to hold the nodes to be processed next
+\end{itemize}
+\begin{algorithm}[H]
+    \caption{Pseudo-Code for Dijkstra's Algorithm}
+    \begin{algorithmic}[1]
+        \Function{Dijkstra}{$G(N, E), s$}
+            \FORALL{$ n \in N $}
+                \STATE{$ dist(n) \gets \infty $}
+                \STATE{$ path(n) \gets nil $}
+            \ENDFOR
+            \STATE{$ dist(s) \gets 0 $}
+            \STATE{$ Q \gets \emptyset $} \Comment{Q is the priority queue (min)}
+            \STATE{$ Insert(Q, (s, 0) $} \Comment{inserts s with key 0} 
+            \WHILE{$ Q \neq \emptyset $}
+                \STATE{$ n \gets top(Q) $} \Comment{minimum in Q, which is the top}
+                \STATE{$ pop(Q) $} \Comment{extracts min of Q (pops)}
+                \FORALL{$ (n1, n2) \in Adj(n) $}
+                    \IF{$ dist(n2) > dist(n1) + weight(n1, n2) $}
+                        \STATE{$ dist(n2) \gets dist(n1) + weight(n1, n2) $}
+                        \STATE{$ path(n2) \gets n1 $}
+                        \IF{$ n2 \in Q $}
+                            \STATE{$ Insert(Q, (n2, dist(n2))) $}
+                        \ENDIF
+                        \ELSE
+                            \STATE{$ Decrease-Key(Q, (n2, dist(n2))) $} \Comment{function to decrease the key in Q}
+                    \ENDIF
+                \ENDFOR
+            \ENDWHILE
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+\paragraph{Analysis}
+The first part of the algorithm's goal is to prepare the data: paths are set to null, distances to infinity, the priority queue is initialized and the origin node is inserted. Then, a breadth-first search is performed; a check is made to every node found in order to understand if its path can be shortened by the use of the edge in analysis. After that, if the node is not already in the queue, it must be inserted, to be eventually processed. If it is, its key must be reduced. The items of the priority queue are ordered by their key. This system is used so that the nodes which are closest to the origin are processed first. This procedure ensures that the distance of already processed nodes remains intact, boosting the algorithm's efficiency and making this a greedy algorithm. \\
+\uline{Note:} Processing a node is used as: cycling through the nodes edges (line 11)
+\paragraph{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O((|N|+|E|) \times \log(|N|) $, where E is the set of edges and N the set of nodes of the graph. Decrease-Key's time efficiency is $ O(|E| \times log(|N|)$. It can be $ O(1) $ if Fibonacci Heaps are used instead of regular Priority Queues, making the whole algorithm $ O(|V| \times log(|V|) $ 
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|V|) $
+\end{itemize}
+\paragraph{Usability}
+This algorithm is one to consider using in the problem, but there may be slightly more efficient ones.
+
+\subsection{Bellman-Ford Algorithm}
+\paragraph{Description}
+The Bellman-Ford Algorithm is another algorithm used to calculate the shortest path between nodes in a graph. It was first proposed by Alfonso Shimbel in 1955 but ended up being named after Richard Bellman and Lester Ford, who later officially published it independently. This algorithm is useful to calculate shortest paths in graphs with negative weight edges and to detect negative edge cycles in them.
+For this algorithm to work, the following extra data is needed:
+\begin{itemize}
+    \item Minimum distance to the origin node from each of the graph's nodes (dist)
+    \item Node that comes before it in its path (path)
+\end{itemize}
+\begin{algorithm}[H]
+    \caption{Pseudo-Code for Bellman-Ford}
+    \begin{algorithmic}[1]
+        \Function{Bellman-Ford}{$G(N, E), s$}
+            \FORALL{$ n \in N $}
+                \STATE{$ dist(n) \gets \infty $}
+                \STATE{$ path(n) \gets nil $}
+            \ENDFOR
+            \STATE{$ dist(s) \gets 0 $}
+            \FOR{$ i = 1 $ \textbf{to} $ |N| - 1 $}
+                \FORALL{$ (n1, n2) \in E $}
+                    \IF{$ dist(n2) > dist(n1) + weight(n1, n2) $}
+                        \STATE{$ dist(n2) \gets dist(n1) + weight(n1, n2) $}
+                        \STATE{$ path(n2) \gets n1 $}
+                    \ENDIF
+                \ENDFOR
+            \ENDFOR
+            \FORALL{$ (n1, n2) \in E $}
+                \IF{$ dist(n1) + weight(n1, n2) < dist(n2) $}
+                    \PRINT fail: negative cycle
+                \ENDIF
+            \ENDFOR
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+\paragraph{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O(|N| \times |E|) $, where E is the set of edges and N the set of nodes of the graph
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but in this case $ O(1) $
+\end{itemize}
+\paragraph{Usability}
+This algorithm poses little interest to this problem given that our edges' weights represent the length of a road, which would never be negative. 
 
 \subsection{Bi-directional Dijkstra}
+\paragraph{Description}
 Ira Pohl (1971) was the first one to design and implement a bi-directional heuristic search algorithm. Search trees emanating from the start and goal nodes failed to meet in the middle of the solution space. The BHFFA algorithm fixed this defect Champeaux (1977).
 Bidirectional search is a graph search algorithm that finds a shortest path from an initial vertex to a goal vertex in a directed graph. It runs two simultaneous searches: one forward from the initial state, and one backward from the goal, stopping when the two meet.
 Compared to normal Dijkstra there's a speedup of 2x. The processed area is 2.pi.r instead of 4.pi.r .
@@ -34,19 +130,7 @@ Qf is the foward queue and Qb the backwards queue.
 Sf and Sb are sets of vertices processed in the forward and backward searches, initially empty.
 mu is the true distance s-t
 \begin{algorithm}
-while Qf is not empty and Qb is not empty:
-    u = extract_min(Qf); v = extract_min(Qb)
-    Sf.add(u); Sb.add(v)
-    if df[u] + db[v] >= mu:
-        break 
-    for x in adj(u):
-        relax(u, x)
-        if x in Sb and df[u] + w(u, x) + db[x] < mu:
-            mu = df[u] + w(u, v) + db[x]
-    for x in adj(v):
-        relax(v, x)
-        if x in Sf and db[v] + w(v, x) + df[x] < mu:
-            mu = db[v] + w(v, x) + df[x]
+
 \end{algorithm}
 
 \subsection{Floyd-Warshall}
@@ -54,25 +138,5 @@ This algorithm was published by Roberto Floyd in 1962.
 It takes an adjacency matrix that represents the graph as an input. The value of a path between to vertices is the sum of all edge's weights through that path. Edges may have negative values but the graph can't have a negative cycle.
 For each pair of vertices the shortest path is calculated. Time complexity is O \begin{math}(|V| ^3).\end{math}, and space complexity is O \begin{math}(|V| ^2).\end{math}
 
-\newpage 
-\begin{algorithm}
-void floydWarshall(int graph[][nV]) {
-  int matrix[nV][nV], i, j, k;
 
-  for (i = 0; i < nV; i++)
-    for (j = 0; j < nV; j++)
-      matrix[i][j] = graph[i][j];
-
-  // Adding vertices individually
-  for (k = 0; k < nV; k++) {
-    for (i = 0; i < nV; i++) {
-      for (j = 0; j < nV; j++) {
-        if (matrix[i][k] + matrix[k][j] < matrix[i][j])
-          matrix[i][j] = matrix[i][k] + matrix[k][j];
-      }
-    }
-  }
-  
-}
-\end{algorithm}
 
