@@ -18,7 +18,61 @@ Before going through with the problem resolution and trying to find the shortest
 % Been trying to solve this problem in my head: how do we distribute the orders efficiently?
 % Also thinking of changing distance units to time units in vehicle and edges
 
-\section{}
+\section{Problem Identification}
+With the graph and the orders pre-processed, there's now a need to find the most efficient way for the vans to reap the stores and deliver the items to costumers. As the vehicles are electric we need to worry about recharging station and how we integrate them in each vehicle path, if needed.
 
 \section{First calculations for Shortest Path}
 Having the graph already pre processed it's time to calculate the shortest path between all the vertices so the map is all processed for the first time. This can be done either using the Bi-directional Dijkstra or Floyd-Warshall algorithm. 
+
+\subsection{Bi-directional Dijkstra}
+Ira Pohl (1971) was the first one to design and implement a bi-directional heuristic search algorithm. Search trees emanating from the start and goal nodes failed to meet in the middle of the solution space. The BHFFA algorithm fixed this defect Champeaux (1977).
+Bidirectional search is a graph search algorithm that finds a shortest path from an initial vertex to a goal vertex in a directed graph. It runs two simultaneous searches: one forward from the initial state, and one backward from the goal, stopping when the two meet.
+Compared to normal Dijkstra there's a speedup of 2x. The processed area is 2.pi.r instead of 4.pi.r .
+-MISSING COMPLEXITY SPACE AND TIME
+
+Qf is the foward queue and Qb the backwards queue.
+Sf and Sb are sets of vertices processed in the forward and backward searches, initially empty.
+mu is the true distance s-t
+\begin{algorithm}
+while Qf is not empty and Qb is not empty:
+    u = extract_min(Qf); v = extract_min(Qb)
+    Sf.add(u); Sb.add(v)
+    if df[u] + db[v] >= mu:
+        break 
+    for x in adj(u):
+        relax(u, x)
+        if x in Sb and df[u] + w(u, x) + db[x] < mu:
+            mu = df[u] + w(u, v) + db[x]
+    for x in adj(v):
+        relax(v, x)
+        if x in Sf and db[v] + w(v, x) + df[x] < mu:
+            mu = db[v] + w(v, x) + df[x]
+\end{algorithm}
+
+\subsection{Floyd-Warshall}
+This algorithm was published by Roberto Floyd in 1962.
+It takes an adjacency matrix that represents the graph as an input. The value of a path between to vertices is the sum of all edge's weights through that path. Edges may have negative values but the graph can't have a negative cycle.
+For each pair of vertices the shortest path is calculated. Time complexity is O \begin{math}(|V| ^3).\end{math}, and space complexity is O \begin{math}(|V| ^2).\end{math}
+
+\newpage 
+\begin{algorithm}
+void floydWarshall(int graph[][nV]) {
+  int matrix[nV][nV], i, j, k;
+
+  for (i = 0; i < nV; i++)
+    for (j = 0; j < nV; j++)
+      matrix[i][j] = graph[i][j];
+
+  // Adding vertices individually
+  for (k = 0; k < nV; k++) {
+    for (i = 0; i < nV; i++) {
+      for (j = 0; j < nV; j++) {
+        if (matrix[i][k] + matrix[k][j] < matrix[i][j])
+          matrix[i][j] = matrix[i][k] + matrix[k][j];
+      }
+    }
+  }
+  
+}
+\end{algorithm}
+
