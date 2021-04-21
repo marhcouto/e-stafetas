@@ -128,9 +128,8 @@ For each Vehicle V(i):
 
 \section{Objective Function}
 
-The company's goal for this system is to optimize the use of their vehicles, which means reducing the time it takes to fulfill all orders. Being $ f $ the function that represents the time on the road by all vehicles, the objective is to minimize it:
-\[ f = \sum_{i=0}^n t_i \]
+The company's goal for this system is to optimize the use of their vehicles, which means reducing the time it takes to fulfill all orders. As we will not consider different speeds of travel for the vehicles, the time to fulfill all orders (the time to fulfill the last order) behaves in parallel to the maximum distance travelled by a vehicle. Being $ f $ the function that represents the most distance travelled by a vehicle, the objective is to minimize it:
+\[ f = \max(D) \]
 \begin{itemize}
-    \item $ t_i $ being the time spent travelling by a vehicle in a day (for all its orders)
-    \item $ n $ being the number of vehicles in the company's fleet
+    \item $ D $ being the set of distances travelled by each vehicle in a day
 \end{itemize}

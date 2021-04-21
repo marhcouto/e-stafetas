@@ -29,3 +29,19 @@ Another problem which needs to be tackled in the route calculation phase is the 
 
 \section{Trip optimization}
 Due to the reduced amount of vehicles available for the delivery, these must be intelligently distributed through the drivers to make the usage of the vehicles the most efficient possible.
+
+
+\section{Division in Iterations}
+The problem at end can also be divided into iterations (phases)
+
+\paragraph{Iteration I}
+There is only one vehicle with infinite autonomy and there are no blocked roads or inaccessible edges. This means the only task is to calculate the shortest path for this vehicle to deliver all orders.
+
+\paragraph{Iteration II}
+There is only one vehicle with infinite autonomy but there may be inaccessible nodes, obligating us to check such conditions before the calculation of the shortest path for this vehicle.
+
+\paragraph{Iteration III}
+There is only one vehicle but its autonomy is not infinite anymore. With this, the vehicle's autonomy at any given point will have to be taken into account and recharge points will become part of the algorithm.
+
+\paragraph{Iteration IV}
+Now there are multiple vehicles, which demands intelligent distribution of the orders throughout the fleet.
