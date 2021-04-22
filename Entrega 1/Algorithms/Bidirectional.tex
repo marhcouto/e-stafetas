@@ -4,27 +4,22 @@
         \Function{BidirectionalDijkstra}{$G(N, E), s, p$} \Comment{s is the starting node and p the ending node}
             \FORALL{$ n \in N $}
                 \STATE{$ dist(n) \gets \infty $}
-                \STATE{$ path(n) \gets nil $}
+                \STATE{$ distR(n) \gets \infty $} \Comment{Distance backward}
                 \STATE{$ way(n) \gets 0 $}
             \ENDFOR
-            \STATE{$ dist(s) \gets 0 $, $ dist(p) \gets 0$} 
+            \STATE{$ bestDist \gets \inf $}
+            \STATE{$ dist(s) \gets 0 $, $ distR(p) \gets 0$} 
             \STATE{$ way(s) \gets 1 $, $ way(p) \gets 2 $}
-            \STATE{$ bestDist \gets \inf $} \Comment{best distance}
-            \STATE{$ bestForNode \gets nil $, $ bestBackNode \gets nil $} \Comment{nodes where the ways of the path with best distance crossed, useful to invert the paths in CorrectPathsFunction}
             \STATE{$ Qs \gets \emptyset $, $ Qp \gets \emptyset $} \Comment{Qs and Qp are the priority queues for the forward and backward search side respectively}
             \STATE{$ Insert(Qs, (s, 0) $, $ Insert(Qp, (p, 0) $} \Comment{inserts s and p with key 0} 
             \WHILE{$ Q \neq \emptyset $}
-                \STATE{$ n \gets top(Qs) $, $ v \gets top(Qp) $} \Comment{minimum in priority queues, which is the top}
-                \STATE{$ pop(Qs) $, $ pop(Qp) $} \Comment{extracts min of priority queues (pops)}
-                \IF{$ dist(n) + dist(v) \geq bestDist $}
-                    \STATE{$ CorrectPaths(bestForNode, s, bestBackNode) $}
-                    \RETURN{$ bestDist $}
+                \STATE{$ n \gets extractMin(Qs) $, $ v \gets extractMin(Qp) $} \Comment{extracts the min from the priority queue}
+                \IF{$ dist(n) + distR(v) \geq bestDist $}
+                    \RETURN {$ bestDist $}
                 \ENDIF
                 \FORALL{$ (n, n2) \in Adj(n) $}
-                    \IF{$ way(n2) = 2 $ $ \AND $ $ dist(n2) + weight(n, n2) + dist(n) < bestDist $}
-                        \STATE{$ bestDist \gets dist(n2) + weight(n, n2) + dist(n) $}
-                        \STATE{$ bestForNode \gets n $}
-                        \STATE{$ bestBackNode \gets n2 $}
+                    \IF{$ way(n2) = 2 $ $ \AND $ $ bestDist > distR(n2) + weight(n, n2) + dist(n) $ }
+                        \STATE{$ bestDist \gets distR(n2) + weight(n, n2) + dist(n) $}
                     \ELSE
                         \STATE{$ way(n2) \gets 1 $}
                         \STATE{$ MiniDijkstraStep(Qs, n, n2) $}
@@ -32,10 +27,8 @@
                 \ENDFOR
                 
                 \FORALL{$ (v, v2) \in Adj(v) $}
-                    \IF{$ way(v2) = 1 $ $ \AND $ $ dist(v2) + weight(v, v2) + dist(v) < bestDist $}
-                        \STATE{$ bestDist \gets dist(v2) + weight(v, v2) + dist(v) $}
-                        \STATE{$ bestForNode \gets v2 $}
-                        \STATE{$ bestBackNode \gets v $}
+                    \IF{$ way(v2) = 1 $ $ \AND $ $ bestDist > distR(v) + weight(v, v2) + dist(v2) $}
+                        \STATE{$ bestDist \gets distR(v) + weight(v, v2) + dist(v2) $}
                     \ELSE
                         \STATE{$ way(v2) \gets 2 $}
                         \STATE{$ MiniDijkstraStep(Qp, v, v2) $}
@@ -51,7 +44,6 @@
         \Function{MiniDijkstraStep}{$Q, n, n2$}
             \IF{$ dist(n2) > dist(n) + weight(n, n2) $}
                 \STATE{$ dist(n2) \gets dist(n) + weight(n, n2) $}
-                \STATE{$ path(n2) \gets n $}
                 \IF{$ n2 \in Qs $}
                     \STATE{$ Insert(Qs, (n2, dist(n2))) $}
                 \ELSE
@@ -60,17 +52,18 @@
             \ENDIF
         \EndFunction
     \end{algorithmic}
-    \begin{algorithmic}[1]
-        \Function{CorrectPaths}{$n, s, n2$} \Comment{n is the last node in forward, s is the starting node, n2 is the last node in backward}
-            \STATE{$ v \gets path(n) $}
-            \STATE{$ path(n) \gets n2 $}
-            \WHILE{$ n \neq s $}
-                \STATE{$ v2 \gets path(v) $}
-                \STATE{$ path(v) \gets n $}
-                \STATE{$ n \gets v $}
-                \STATE{$ v \gets v2 $}
-            \ENDWHILE
-        \EndFunction
-        \Comment{Function to correct the path. If this step were not made, the algorithm would only calculate the distance of the shortest path}
-    \end{algorithmic}
 \end{algorithm}
+%    \begin{algorithmic}[1]
+%        \Function{CorrectPaths}{$n, s, n2$} \Comment{n is the last node in forward, s is the starting node, n2 is the last node in backward}
+%            \STATE{$ v \gets path(n) $}
+%            \STATE{$ path(n) \gets n2 $}
+%            \WHILE{$ n \neq s $}
+%                \STATE{$ v2 \gets path(v) $}
+%                \STATE{$ path(v) \gets n $}
+%                \STATE{$ n \gets v $}
+%                \STATE{$ v \gets v2 $}
+%            \ENDWHILE
+%        \EndFunction
+%        \Comment{Function to correct the path. If this step were not made, the algorithm would only calculate the distance of the shortest path}
+%    \end{algorithmic}
+%\end{algorithm}
