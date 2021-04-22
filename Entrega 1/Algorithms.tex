@@ -23,15 +23,15 @@ This algorithm was conceived by Edsger W. Dijkstra in 1956 and is used to calcul
 
 \subsubsection{Analysis}
 The first part of the algorithm's goal is to prepare the data (lines 1-6): paths are set to null, distances to infinity, the priority queue is initialized and the origin node is inserted. Then, a breadth-first search is performed; a check is made to every node found in order to understand if its path can be shortened by the use of the edge in analysis. After that, if the node is not already in the queue, it must be inserted, to be eventually processed. If it is, its key must be reduced. The items of the priority queue are ordered by their key. This system is used so that the nodes which are closest to the origin are processed first. This procedure ensures that the distance of already processed nodes remains intact, boosting the algorithm's efficiency and making this a greedy algorithm. \\
-\begin{itemize}
-    \item \textbf{Loop invariant} - $ priorityQueue \neq \emptyset $, as each time a node is processed, its shortest path is defined and all nodes will be processed when the queue is empty
-    \item \textbf{Loop variant} - the number of nodes to be processed, since the algorithm would stop when the queue is empty
-\end{itemize}
+%\begin{itemize}
+%    \item \textbf{Loop invariant} - $ priorityQueue \neq \emptyset $, as each time a node is processed, its shortest path is defined and all nodes will be processed when the queue is empty
+%    \item \textbf{Loop variant} - the number of nodes to be processed, since the algorithm would stop when the queue is empty
+%\end{itemize}
 
 \subsubsection{Efficiency}
 \begin{itemize}
-    \item \textbf{Temporal Complexity} - $ O((|N|+|E|) \times \log(|N|) $, where E is the set of edges and N the set of nodes of the graph. Decrease-Key's time efficiency is $ O(|E| \times log(|N|)$. It can be $ O(1) $ if Fibonacci Heaps are used instead of regular Priority Queues, making the whole algorithm $ O(|V| \times log(|V|) $ 
-    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|V|) $
+    \item \textbf{Temporal Complexity} - $ O((|N|+|E|) \times \log(|N|) $, where E is the set of edges and N the set of nodes of the graph. Decrease-Key's time efficiency is $ O(|E| \times log(|N|)$. It can be $ O(1) $ if Fibonacci Heaps are used instead of regular Priority Queues, making the whole algorithm $ O(|N| \times log(|N|) $ 
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|N|) $
 \end{itemize}
 
 \subsubsection{Usability}
@@ -84,23 +84,41 @@ Bidirectional search (in this case, Bidirectional Dijkstra's) is a graph search 
 
 \subsubsection{Analysis}
 This algorithm basically performs two Dijkstra's algorithms: one starting from the initial node and going forward(lines 16-23); another one starting from the ending node and going backward (lines 24-31). Each time they cross, the distance is registered (lines 25-26 for example). The stopping criteria is a tricky problem in this case. In many situations, the algorithm ends when the two sets collide (forward search and backward search). We found that this criteria did not guarantee the shortest path. Instead, we chose to end the algorithm when there can be no longer any better distances because the nodes being processed are already too far apart.
-\begin{itemize}
-    \item \textbf{Loop invariant} - $ dist(n) + distR(v) > bestDist $, where best distance is the best Distance for a complete path obtained yet, dist(n) is the distance of the node being processed in forward way to the starting node and $ distR(v) $ the distance of the node being processed in backward way to the ending node
-    \item \textbf{Loop variant} - the number of nodes to be processed in each way, since the algorithm would stop when each search had got no more nodes to process on the queue
-\end{itemize}
+%\begin{itemize}
+%    \item \textbf{Loop invariant} - $ dist(n) + distR(v) > bestDist $, where best distance is the best Distance for a complete path obtained yet, dist(n) is the distance of the node being processed in forward way to the starting node and $ distR(v) $ the distance of the node being processed in backward way to the ending node
+%    \item \textbf{Loop variant} - the number of nodes to be processed in each way, since the algorithm would stop when each search had got no more nodes to process on the queue
+%\end{itemize}
 
 \subsubsection{Efficiency}
 \begin{itemize}
     \item \textbf{Temporal Complexity} - $ O((|N|+|E|) \times \log(|N|) $, where E is the set of edges and N the set of nodes of the graph.
-    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|V|) $
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|N|) $
 \end{itemize}
-Eventhough there's a speed up, the complexities will be the same as in Dijkstra's, since the difference is multiplication and division by constants, which is ignored in Big O order.
+Even though there's a speed up, the complexities will be the same as in Dijkstra's, since the difference is multiplication and division by constants, which is ignored in Big O order.
 
 \subsubsection{Usability}
 Bidirectional Dijkstra's algorithm is one of the fastest algorithms when it comes shortest paths. It has the down-side of requiring the previous knowledge of the ending/destination node, but in this scenario that is not a problem.
 
 
+\subsection{A* Algorithms}
+\subsubsection{Description and Analysis}
+The first time a A* Algorithm came up was in \textit{Shakey Project}, project of the first general purpose mobile robot capable of reason about is own actions. In an A* Search Algorithm, the 'level' of a node in a graph becomes a sum of two different characteristics. For instance, applied to this problem, the distance a node is from the origin in the search algorithm is substituted for the sum of:
+\begin{itemize}
+    \item $d_{sv}$ - actual distance to the origin
+    \item $\pi_{nt}$ - estimated guess of the distance to the goal node (heuristic)
+\end{itemize}
+The reliability of this technique depends on the efficacy of the heuristic. In this case, because the weight of edges is distance in km, the efficacy is great if we assume $\pi$ to be the euclidean distance. This algorithm can be implemented into both Bidirectional and normal Dijkstra's.
+\begin{itemize}
+    \item \textbf{Upside} - Speeds up the process immensely
+    \item \textbf{Downside} - The algorithm does not absolutely guarantee the best solution.
+\end{itemize}
 
+\subsubsection{Usability}
+This is a technique that shows to be very promising and a good idea to implement in the solution of this problem.
+
+
+
+\newpage
 \section{Shortest Path Between All Nodes}
 
 
@@ -111,3 +129,37 @@ This algorithm was published by Robert Floyd in 1962, yet it was virtually the s
 % For each pair of vertices, the shortest path is calculated. Time complexity is O \begin{math}(|V| ^3).\end{math}, and space complexity is O \begin{math}(|V| ^2).\end{math}
 
 \subsubsection{Extra Data, Data Structures and Algorithms Required}
+\begin{itemize}
+    \item $ V \times V $ matrix (another one if paths are needed)
+    \item 
+\end{itemize}
+
+\input{Algorithms/Floyd-Warshall.tex}
+\uline{Note:} The pseudocode is not complete, missing the matrix to calculate the paths and respective instructions. This was done in order to simplify the algorithm and minimize it.
+
+\subsubsection{Analysis}
+First part is basically the preparation of the matrix: fill it with $\infty$ distances; for the edges existant (lines 1-3), change the values in the matrix to their weight (lines 4-6). Then, all pairs of nodes will be checked on if there is any node the path can pass through that would minimize its cost (lines 7-14). 
+
+\subsubsection{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O(|N|^3) $, where N is the set of nodes of the graph.
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|N|^2) $, for the matrix of size $|N| \times |N|$
+\end{itemize}
+
+\subsubsection{Usability}
+This algorithm is an interesting algorithm to be used in the beginning of the program, to leave all shortest paths processed. However, this might take a long time, and it might be a better idea to simply calculate the shortest path each time it is needed.
+
+
+\subsection{Dijkstra's Algorithm}
+
+\subsubsection{Description and Analysis}
+Dijkstra's can also be used to calculate all shortest paths. This is done by simply executing the algorithm for every node in the graph as origin.
+ 
+\subsubsection{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O(|N| \times (|N|+|E|) \times \log(|N|) $, where E is the set of edges and N the set of nodes of the graph. Same as Dijkstra's but multiplied by $|N|$
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|N|) $, for the priority queue, same as Dijkstra's
+\end{itemize}
+
+\subsubsection{Usability}
+This is a better option for less dense graphs compared to Floyd-Warshall. As this is not the case for a road network, this algorithm is relatively irrelevant.
