@@ -9,7 +9,7 @@ Algorithms for the calculation of the Shortest Path between two points are very 
 \subsection{Dijkstra's Algorithm}
 
 \subsubsection{Description}
-This algorithm was conceived by Edsger W. Dijkstra in 1956 and is used to calculate shortest paths in directed or undirected graphs, so long there are no edges with negative weight. Upon utilization of this algorithm, a tree holding the shortest paths from the origin node to all others is formed. 
+This algorithm was conceived by Edsger W. Dijkstra's in 1956 and is used to calculate shortest paths in directed or undirected graphs, so long there are no edges with negative weight. Upon utilization of this algorithm, a tree holding the shortest paths from the origin node to all others is formed. 
 
 \subsubsection{Extra Data, Data Structures and Algorithms Required}
 \begin{itemize}
@@ -64,11 +64,11 @@ In this algorithm, the first step is to prepare the graph (lines 1-4). Then, all
 This algorithm poses little interest to this problem given that our edges' weights represent the length of a road, which would never be negative. 
 
 
-\subsection{Bi-directional Dijkstra}
+\subsection{Bidirectional Dijkstra}
 
 \subsubsection{Description}
-Ira Pohl was the first one to design and implement a bi-directional heuristic search algorithm in 1971. 
-Bidirectional search (in this case, Bidirectional Dijkstra's) is a graph search algorithm that finds a shortest path from an initial node to a goal node in a directed or undirected graph. It runs two simultaneous searches: one forward from the initial state, and one backward from the goal, alternating between the two. The stopping criteria is one that must be very well implemented to guarantee the shortest path. Compared to normal Dijkstra there's a speedup of 2x.
+Ira Pohl was the first one to design and implement a bidirectional heuristic search algorithm in 1971. 
+Bidirectional Dijkstra's that implements the idea of a bidirectional search into Dijkstra's algorithm. It finds a shortest path from an initial node to a goal node in a directed or undirected graph. It runs two simultaneous searches: one forward from the initial state, and one backward from the goal, alternating between the two. The stopping criteria is one that must be very well implemented to guarantee the shortest path. Compared to normal Dijkstra's there's a speedup of 2x.
 
 \subsubsection{Extra Data, Data Structures and Algorithms Required}
 \begin{itemize}
@@ -80,7 +80,7 @@ Bidirectional search (in this case, Bidirectional Dijkstra's) is a graph search 
 \end{itemize}
 
 \input{Algorithms/Bidirectional.tex}
-\uline{Note:} The pseudocode is not complete, missing the parts to calculate the actual path and to calculate the reverse graph (needed for the backward search because this is a directed graph). These parts were excluded in order to not make the algorithm's pseudocode even more complex and spatious.
+\uline{Note:} The pseudocode is not complete, missing the parts to calculate the actual path and to calculate the transposed graph (needed for the backward search because this is a directed graph). These parts were excluded in order to not make the algorithm's pseudocode even more complex and spacious.
 
 \subsubsection{Analysis}
 This algorithm basically performs two Dijkstra's algorithms: one starting from the initial node and going forward(lines 16-23); another one starting from the ending node and going backward (lines 24-31). Each time they cross, the distance is registered (lines 25-26 for example). The stopping criteria is a tricky problem in this case. In many situations, the algorithm ends when the two sets collide (forward search and backward search). We found that this criteria did not guarantee the shortest path. Instead, we chose to end the algorithm when there can be no longer any better distances because the nodes being processed are already too far apart.
@@ -102,7 +102,7 @@ Bidirectional Dijkstra's algorithm is one of the fastest algorithms when it come
 
 \subsection{A* Algorithms}
 \subsubsection{Description and Analysis}
-The first time a A* Algorithm came up was in \textit{Shakey Project}, project of the first general purpose mobile robot capable of reason about is own actions. In an A* Search Algorithm, the 'level' of a node in a graph becomes a sum of two different characteristics. For instance, applied to this problem, the distance a node is from the origin in the search algorithm is substituted for the sum of:
+The first time a A* Algorithm came up was in \textit{Shakey Project}, project of the first general purpose mobile robot capable of reason about is own actions. In an A* (pronounced A-star) Search Algorithm, the 'level' of a node in a graph becomes a sum of two different characteristics. For instance, applied to this problem, the distance a node is from the origin in the search algorithm is substituted for the sum of:
 \begin{itemize}
     \item $d_{sv}$ - actual distance to the origin
     \item $\pi_{nt}$ - estimated guess of the distance to the goal node (heuristic)
@@ -120,18 +120,17 @@ This is a technique that shows to be very promising and a good idea to implement
 
 \newpage
 \section{Shortest Path Between All Nodes}
-
+This section is dedicated to algorithms that calculate the shortest path between all pairs of points. Such algorithms may be used in the solution, specially in the pre-processing part.
 
 \subsection{Floyd-Warshall}
 
 \subsubsection{Description}
-This algorithm was published by Robert Floyd in 1962, yet it was virtually the same as some algorithms published by Stephen Warshall and Bernard Roy, 1962 and 1959 respectively. It takes an adjacency matrix that represents the graph as an input (empty in the beggining) and calculates the shortest paths between all nodes. The value of a path between to vertices is the sum of all edge's weights through that path. It is registered in the matrix as such: distance of shortest path between 1 and 4 would be matrix[1][4]. Edges may have negative values but the graph can't have a negative cycle.
+This algorithm was published by Robert Floyd in 1962, yet it was virtually the same as some algorithms published by Stephen Warshall and Bernard Roy, 1962 and 1959 respectively. It takes an adjacency matrix that represents the graph as an input (empty in the beginning) and calculates the shortest paths between all nodes. The value of a path between to vertices is the sum of all edge's weights through that path. It is registered in the matrix as such: distance of shortest path between 1 and 4 would be matrix[1][4]. Edges may have negative values but the graph can't have a negative cycle.
 % For each pair of vertices, the shortest path is calculated. Time complexity is O \begin{math}(|V| ^3).\end{math}, and space complexity is O \begin{math}(|V| ^2).\end{math}
 
 \subsubsection{Extra Data, Data Structures and Algorithms Required}
 \begin{itemize}
-    \item $ V \times V $ matrix (another one if paths are needed)
-    \item 
+    \item $ |N| \times |N| $ matrix (another one if paths are needed), where $ |N| $ is the number of vertices
 \end{itemize}
 
 \input{Algorithms/Floyd-Warshall.tex}
@@ -163,3 +162,80 @@ Dijkstra's can also be used to calculate all shortest paths. This is done by sim
 
 \subsubsection{Usability}
 This is a better option for less dense graphs compared to Floyd-Warshall. As this is not the case for a road network, this algorithm is relatively irrelevant.
+
+
+
+\newpage
+\section{Connectivity}
+The algorithms in this section check the connectivity of the graph. By other words, this section is dedicated to algorithms that detect if any nodes are inaccessible to others, dividing the graph in strongly connected components. A graph will be strongly connected if there is a path between all pairs of points, or if the graph is a strongly connected component itself. Algorithms to test connectivity may be useful to solve the problem of unpredictability.
+
+
+\subsection{Brute Force with Floyd-Warshall}
+
+\subsubsection{Description and Analysis}
+One way to test the connectivity of a graph is by analyzing the results of Floyd-Warhsall in a certain graph. If there are any pairs of nodes which the distance remains $\infty$, they do not belong to the same strongly connected component.
+
+\subsubsection{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O(|N|^3) $, where N is the set of nodes of the graph, same as Floyd-Warshall
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but usually $ O(|N|^2) $, for the matrix of size $|N| \times |N|$
+\end{itemize}
+
+\subsubsection{Usability}
+This algorithm works yet is not a good option. Even if the Floyd-Warshall is going to be utilized anyway, the complexity of traversing the whole matrix is $O(|N|^2)$. Therefore, there are much better algorithms for the job.
+
+
+\subsection{Kosaraju's algorithm}
+
+\subsubsection{Description}
+The algorithm was first published in 1981 by Micha Sharir but gets is name from whom first mencioned it in 1971, Sambasiva Rao Kosaraju. This algorithm allows to identify strongly connected components in a directed graph, testing its connectivity. 
+
+\subsubsection{Extra Data, Data Structures and Algorithms Required}
+\begin{itemize}
+    \item boolean identifying if a node has been visited or not (visited)
+    \item identifier of the strong component the node belongs to (strongComponent)
+    \item function to invert the edges of the graph
+    \item a queue to hold the order of the visits
+\end{itemize}
+
+\input{Algorithms/Kosaraju.tex}
+
+\subsubsection{Analysis}
+The algorithm performs two depth-first searches in the graph. In the first one, it marks the nodes by visit order (lines 5-9). The second one starts on the nodes with lowest order and is performed on the graph with the edges inverted (lines 10-14). This second one will generate multiple expansion trees (or just one if the graph is strongly connected), each being a strongly connected component. If two nodes are not in the same strongly connected component, one of them cannot be reached from the other.
+
+\subsubsection{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O(|N|+|E|) $, where N is the set of nodes of the graph and E the set of edges. Each dfs is $O(|N|+|E|)$
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but in this one it is $ O(|N|) $, being the size of the queue $|N|$
+\end{itemize}
+
+\subsubsection{Usability}
+This algorithm is a serious candidate to check the connectivity of the graph.
+
+
+\subsection{Tarjan Algorithm}
+
+\subsubsection{Description}
+The Tarjan's Algorithm was named after its inventor, Robert Tarjan, and is another algorithm capable of identifying the strongly connected components in a given graph. It does so, similarly to Kosaraju's, with the help of dfs, only this time the graph is only traversed once.
+
+\subsubsection{Extra Data, Data Structures and Algorithms Required}
+\begin{itemize}
+    \item boolean identifying if a node has been visited or not (visited)
+    \item integer identifying the counter when a node is first found (num)
+    \item integer identifying the lowest num reachable by a node (low)
+\end{itemize}
+
+\input{Algorithms/Tarjan.tex}
+
+\subsubsection{Analysis}
+The algorithm is fairly simple: the graph is traversed by a depth first search (lines 5-6); the $num$ and $low$ of a node are set to the $numCounter$(lines 12-13); each time an already visited node is found, all nodes with $low > that nodes low$ will be changed (lines 16-18). This way, all vertices with the same $low$ belong to the same strongly connected component. 
+
+\subsubsection{Efficiency}
+\subsubsection{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O(|N|+|E|) $, where N is the set of nodes of the graph and E the set of edges. The dfs is $O(|N|+|E|)$. This is the same complexity as Kosaraju's, but the algorithm is twice as fast since it only performs one dfs.
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but in this one it is $ O(1) $.
+\end{itemize}
+
+\subsubsection{Usability}
+This algorithm is an even better candidate than the last one, since it is supposedly twice as fast. 

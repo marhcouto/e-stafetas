@@ -1,0 +1,29 @@
+\begin{algorithm}[H]
+    \caption{Pseudo-Code for Tarjan's Algorithm}
+    \begin{algorithmic}[1]
+        \Function{Tarjan}{$G(N, E)$}
+            \FORALL{$ n \in N $}
+                \STATE{$ visited(n) \gets \FALSE $}
+            \ENDFOR
+            \STATE{$ numCounter \gets 0 $}
+            \FORALL{$ n \in N $}
+                \STATE{$ dfsVisit(n, numCounter) $}
+            \ENDFOR
+        \EndFunction
+        \Function{dfsVisit}{$n, numCounter$} 
+            \IF{ $ visited(n) $}
+                \RETURN{$ low(n) $}
+            \ENDIF
+            \STATE{$ numCounter \gets numCounter + 1 $}
+            \STATE{$ num(n) \gets numCounter $}
+            \STATE{$ low(n) \gets numCounter $}
+            \STATE{$ visited(n) \gets \TRUE $}
+            \FORALL{$ (n, n2) \in Adj(n) $}
+                \STATE{$ temp \gets dfsVisit(n2, numCounter)$}
+                \IF{$ temp < low(n) $}
+                    \STATE{$ low(n) \gets temp $}
+                \ENDIF
+            \ENDFOR
+            \RETURN{$ low(n) $}
+    \end{algorithmic}
+\end{algorithm}

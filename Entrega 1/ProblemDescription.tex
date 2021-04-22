@@ -14,8 +14,12 @@ Each vehicle from the company's fleet has to perform multiple deliveries daily. 
 \end{itemize}
 
 
+\section{Shortest Path Problem}
+In order to optimize the use of the company's vehicles, the itineraries calculated for the paths between pick up and delivery points must be as short and fast as possible. 
+
+
 \section{Autonomy Problem}
-Given the reduced distances the electrical vehicles are capable of covering with 'full tank' in comparison to a traditional petrol fuelled car, the autonomy is an important factor when calculating the optimal itinerary for the vehicle. There are two strategies available for when a vehicle does not have enough fuel to perform a delivery:
+Given the reduced distances the electrical vehicles are capable of covering with 'full tank' in comparison to a traditional vehicle, the autonomy is an important factor when calculating the optimal itinerary for the vehicle. There are two strategies available for when a vehicle does not have enough fuel to perform a delivery:
 \begin{itemize}
     \item The route must go through the company's  garage so that the vehicle can recharge there
     \item The route must go through one of many recharge points scattered throughout the map
@@ -23,25 +27,9 @@ Given the reduced distances the electrical vehicles are capable of covering with
 In a way, the first strategy is simply a special case of the second one, where the recharge point is unique and happens to be in the garage's location.
 
 
-\section{Unpredictability problem}
-Another problem which needs to be tackled in the route calculation phase is the one of the unexpected events that might change the availability of certain roads and paths. At any given time, there may be accidents on the vehicle accidents or road works that block the passage on certain spots that could be part of the optimal path. This demands daily checks, recalculation of the itinerary and may even, in rare cases, deem the delivery impossible for the moment.
+\section{Connectivity problem}
+Another problem which needs to be tackled is the one of the unexpected events that might change the availability of certain roads and paths. At any given time, there may be accidents on the vehicle accidents or road works that block the passage on certain spots that could be part of the optimal path. This demands daily checks, recalculation of the itinerary and may even, in rare cases, deem the delivery impossible for the moment.
 
 
-\section{Trip optimization}
-Due to the reduced amount of vehicles available for the delivery, these must be intelligently distributed through the drivers to make the usage of the vehicles the most efficient possible.
-
-
-\section{Division in Iterations}
-The problem at end can also be divided into iterations (phases)
-
-\paragraph{Iteration I}
-There is only one vehicle with infinite autonomy and there are no blocked roads or inaccessible edges. This means the only task is to calculate the shortest path for this vehicle to deliver all orders.
-
-\paragraph{Iteration II}
-There is only one vehicle with infinite autonomy but there may be inaccessible nodes, obligating us to check such conditions before the calculation of the shortest path for this vehicle.
-
-\paragraph{Iteration III}
-There is only one vehicle but its autonomy is not infinite anymore. With this, the vehicle's autonomy at any given point will have to be taken into account and recharge points will become part of the algorithm.
-
-\paragraph{Iteration IV}
-Now there are multiple vehicles, which demands intelligent distribution of the orders throughout the fleet.
+\section{Orders Distribution}
+Due to the reduced amount of vehicles available for the delivery, orders must be intelligently distributed through the drivers to make the usage of the vehicles the most efficient.
