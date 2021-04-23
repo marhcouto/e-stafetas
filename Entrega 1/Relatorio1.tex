@@ -3,6 +3,12 @@
 % Margins
 \usepackage[]{geometry}
 
+% Links
+\usepackage{hyperref}
+\makeatletter
+\g@addto@macro{\UrlBreaks}{\UrlOrds}
+\makeatother
+
 % Maths
 \usepackage{siunitx}
 
@@ -82,5 +88,7 @@
 \newpage 
 \input{Functionalities.tex}
 
+\newpage
+\input{Biblio.tex}
 
 \end{document}
