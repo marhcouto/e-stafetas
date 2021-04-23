@@ -241,20 +241,33 @@ This algorithm is an even better candidate than the last one, since it is suppos
 
 
 \newpage
-\section{Other Algorithms}
+\section{Clustering Algorithms}
+
+A Clustering is a machine learning task which involves the recognition of natural grouping in data. Such algorithms can be used in the distribution of orders per vehicle.
 
 
-\subsection{Rout Distribution Algorithm}
+\subsection{Agglomerative Hierarchical Clustering}
 
 \subsubsection{Description}
-This section is dedicated to the algorithm used to distribute the orders per each vehicle. To optimize the maximum distance that a vehicle travels (or maximum length of a route), this would become a Rout Optimization problem, far too complex to try to solve for this situation. As such, the possible algorithm to implement does not barely guarantee the best solution. It is meant only to build slightly optimized routes.
 
-\subsubsection{Analysis and Behaviour}
-\begin{enumerate}
-    \item 
-\end{enumerate}
+This algorithm is one of the most common Hierarchical Clustering algorithms. It is used to form groups of objects of data based on their similarity. In this case, we will use it to form N groups of data nodes with great similarity.
 
-\subsection{Extras}
+\input{Algorithms/Clustering.tex}
+\uline{Note:} the implementation presented above is just a rough sketch, the one to be implemented will be different.
+
+\subsubsection{Analysis}
+The algorithm begins to find the pair of points which are most similar. In this case, similarity is measured by distance (lines 6-14). After he has found one, he merges the two sets (. In between sets, there are many criteria to calculate similarity. The one we will implement is taking the similarity between two sets as the similarity of the most similar pair of points where one belong to the first set and other to the second set. This algorithm adopts a Bottom-Up strategy (as do all agglomerative hierarchical clustering algorithms), as it start by processing each node and joining them to obtain the final result.  
+
+\subsubsection{Efficiency}
+\begin{itemize}
+    \item \textbf{Temporal Complexity} - $ O(|S|^2*(|S| - n)) $, where S is the set of points. This is only an estimated guess.
+    \item \textbf{Spatial Complexity} - Depends on the implementation, but in this one it is $ O(|S|) $.
+\end{itemize}
+
+\subsubsection{Usability}
+This is the only algorithm analysed in this cathegory, thus it is the chosen one to perform the task.
+
+\section{Extras}
 There are other algorithms, simpler or less relevant, that may (or may not) be used in our solution:
 \begin{itemize}
     \item Breadth-First Search (bfs) - Graph searching algorithm
@@ -262,5 +275,5 @@ There are other algorithms, simpler or less relevant, that may (or may not) be u
     \item Decrease-Key Function - Priority changing function on a priority queue
     \item Graph Transposing Function - Inversion of the edges in a directed graph
     \item Fibonacci Heaps (Data structure) - Improved priority queue
-    \irem Euclidian Distance function - To calculate the euclidian (straight-line) distance between two points
+    \item Euclidian Distance function - To calculate the euclidian (straight-line) distance between two points
 \end{itemize}
