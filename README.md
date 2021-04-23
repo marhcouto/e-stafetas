@@ -1,4 +1,4 @@
-# ProjetoCAL-FEUP
+# Project CAL-FEUP
 
 ## Theme
 E-Stafetas - Delivery System
