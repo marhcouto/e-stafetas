@@ -1,6 +1,13 @@
 \chapter{Prospective Solution}
 
 
+\section{Pre-Processing of Input Data}
+Before going through with the problem resolution and trying to find the shortest path for the vehicles, we opt to pre-process the graph, making the other tasks easier.
+
+\begin{itemize}
+    \item calculating the shortest paths for all pairs of nodes in a certain radius of the company's garage through use of Floyd-Warshall's algorithm. This will allow the shortest paths between most used nodes to already be calculated, speeding up the calculation of itineraries
+    \item evaluating the connectivity of the graph through the Tarjan's algorithm,  followed by removal of the irrelevant elements
+\end{itemize}
 
 
 \section{Problem Identification}
@@ -17,36 +24,18 @@ With the graph and the orders pre-processed, there's now a need to find the most
 \section{Solutions}
 
 \subsection{Problem I - Shortest Paths}
-Although most relevant pairs of nodes already have their shortest path calculated, some pick up or delivery points might be out of bound for the pre-processing calculations. For these and other special cases, we deemed Bidirectional Dijkstra with implementation of A* algorithm the best option.
-
+Although most relevant pairs of nodes already have their shortest path calculated, some pick up or delivery points might be out of bound for the pre-processing calculations. For these and other special cases, we deemed Bidirectional Dijkstra with implementation of A* algorithm the best option. This choice was made considering the speed of the algorithm and the fact that the destination node is supposedly always known.
 
 \subsection{Problem II - Autonomy/Range}
 To tackle this problem, before every assignment of a vehicle to a certain path, its current range must be evaluated. If the value is not enough for the voyage, the vehicle must localize one or more recharge points. The criteria to find the best points is to choose the recharge point closest to both the starting and the finishing node. 
 
 \subsection{Problem III - Connectivity}
-Tarjan's algorithm was our choice to solve the unpredictability problem. By checking the connectivity of the graph, we can check for any nodes that are not accessible, supposedly due to road work, accidents or other unexpected events. We chose Tarjan's because it presents itself as the fastest option from the ones we analysed.
+Tarjan's algorithm was our choice to solve the connectivity problem. By checking the connectivity of the graph, we can check for any nodes that are not accessible, supposedly due to road work, accidents or other unexpected events. We chose Tarjan's because it presents itself as the fastest option from the ones we analysed.
 
 \subsection{Problem IV - Orders Distribution}
-The distribution of the orders is made the following manner:
-\begin{enumerate}
-    \item The first pairs of pick up and delivery points are assigned to the vehicles 
-\end{enumerate}
 
 
 
-
-
-
-
-
-
-\section{Pre-Processing of Input Data}
-Before going through with the problem resolution and trying to find the shortest path for the vehicles, we opt to pre-process the graph, making the other tasks easier.
-
-\begin{itemize}
-    \item calculating the shortest paths for all pairs of nodes in a certain radius of the company's garage through use of Floyd-Warshall's algorithm. This will allow the shortest paths between most used nodes to already be calculated, speeding up the calculation of itineraries
-    \item evaluating the connectivity of the graph through the Tarjan's algorithm, consequently checking for any inaccessible nodes or blocked edges (result of accidents or road works) followed by removal of the irrelevant elements
-\end{itemize}
 
 
 

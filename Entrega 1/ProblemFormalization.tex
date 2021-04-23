@@ -11,6 +11,7 @@
     \item The words 'street', 'road' and 'way' are used interchangeably
     \item The words 'node' and 'vertex' ('nodes' and 'vertices') are used interchangeably
     \item The words 'range' and 'autonomy' are used interchangeably
+    \irem The words 'rout' and 'itinerary' are used interchangeably
 \end{itemize}
 
 
@@ -139,8 +140,13 @@ For each Vehicle V(i):
 
 \section{Objective Function}
 
-The company's goal for this system is to optimize the use of their vehicles, which means reducing the time it takes to fulfill all orders. As we will not consider different speeds of travel for the vehicles, the time to fulfill all orders (the time to fulfill the last order) behaves in parallel to the maximum distance travelled by a vehicle. Being $ f $ the function that represents the most distance travelled by a vehicle, the objective is to minimize it:
+The company's goal for this system is to optimize the use of their vehicles. As we will not consider different speeds of travel for the vehicles, the time to fulfill a order behaves in parallel to the distance of its path. In our interpretation of the problem, optimizing the use of the vehicles would mean to find the shortest paths between two interest points in a rout, as well as minimizing the distance of the rout itself. In an optimal solution, the maximum distance travelled by a vehicle in a day would also be minimized. As such, there must be three functions to optimize (ones depend on the others). Being $ f $ the function that represents the most distance travelled by a vehicle; $ g $ the sum of the distances between the points in an itinerary; $ h $ the function that represents the distance between two interest points: the objective is to minimize them:
 \[ f = \max(D) \]
 \begin{itemize}
     \item $ D $ being the set of distances travelled by each vehicle in a day
+\end{itemize}
+\[ g = \max(sum(d)) \]
+\[ h = \max(d) \]
+\begin{itemize}
+    \item $ d_1 $ being the distance from one interest point to another
 \end{itemize}

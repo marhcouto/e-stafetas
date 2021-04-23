@@ -231,7 +231,6 @@ The Tarjan's Algorithm was named after its inventor, Robert Tarjan, and is anoth
 The algorithm is fairly simple: the graph is traversed by a depth first search (lines 5-6); the $num$ and $low$ of a node are set to the $numCounter$(lines 12-13); each time an already visited node is found, all nodes with $low > that nodes low$ will be changed (lines 16-18). This way, all vertices with the same $low$ belong to the same strongly connected component. 
 
 \subsubsection{Efficiency}
-\subsubsection{Efficiency}
 \begin{itemize}
     \item \textbf{Temporal Complexity} - $ O(|N|+|E|) $, where N is the set of nodes of the graph and E the set of edges. The dfs is $O(|N|+|E|)$. This is the same complexity as Kosaraju's, but the algorithm is twice as fast since it only performs one dfs.
     \item \textbf{Spatial Complexity} - Depends on the implementation, but in this one it is $ O(1) $.
@@ -239,3 +238,29 @@ The algorithm is fairly simple: the graph is traversed by a depth first search (
 
 \subsubsection{Usability}
 This algorithm is an even better candidate than the last one, since it is supposedly twice as fast. 
+
+
+\newpage
+\section{Other Algorithms}
+
+
+\subsection{Rout Distribution Algorithm}
+
+\subsubsection{Description}
+This section is dedicated to the algorithm used to distribute the orders per each vehicle. To optimize the maximum distance that a vehicle travels (or maximum length of a route), this would become a Rout Optimization problem, far too complex to try to solve for this situation. As such, the possible algorithm to implement does not barely guarantee the best solution. It is meant only to build slightly optimized routes.
+
+\subsubsection{Analysis and Behaviour}
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+\subsection{Extras}
+There are other algorithms, simpler or less relevant, that may (or may not) be used in our solution:
+\begin{itemize}
+    \item Breadth-First Search (bfs) - Graph searching algorithm
+    \item Depth-First Search (dfs) - Graph searching algorithm
+    \item Decrease-Key Function - Priority changing function on a priority queue
+    \item Graph Transposing Function - Inversion of the edges in a directed graph
+    \item Fibonacci Heaps (Data structure) - Improved priority queue
+    \irem Euclidian Distance function - To calculate the euclidian (straight-line) distance between two points
+\end{itemize}
