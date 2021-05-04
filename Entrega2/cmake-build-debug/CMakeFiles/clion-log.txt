@@ -1,0 +1,4 @@
+"C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\marhc\Documents\feup\4\CAL\ProjetoCAL-FEUP\Entrega2
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/cmake-build-debug

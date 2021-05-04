@@ -1,0 +1,3 @@
+C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/cmake-build-debug/CMakeFiles/Entrega2.dir
+C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
