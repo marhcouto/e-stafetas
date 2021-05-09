@@ -86,6 +86,9 @@
 		<Unit filename="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/Algorithms/Graph.h">
 			<Option target="Entrega2"/>
 		</Unit>
+		<Unit filename="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/Algorithms/MutablePriorityQueue.h">
+			<Option target="Entrega2"/>
+		</Unit>
 		<Unit filename="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/main.cpp">
 			<Option target="Entrega2"/>
 		</Unit>
