@@ -16,59 +16,59 @@
 
 template <class T> class Edge;
 template <class T> class Graph;
-template <class T> class Vertex;
+template <class T> class Node;
 
 #define INF std::numeric_limits<double>::max()
 
 
 template <class T>
-class Vertex {
+class Node {
     T info; //Information of the node
     std::vector<Edge<T> *> adj; //Outgoing edges
     bool visited;
     double dist = 0;
-    Vertex<T> *path = nullptr;
+    Node<T> *path = nullptr;
     int queueIndex = 0; 		// required by MutablePriorityQueue
-    Edge<T> * addEdge(Vertex<T> *dest, double w);
+    Edge<T> * addEdge(Node<T> *dest, double w);
 public:
-    Vertex(T in);
-    bool operator< (const Vertex<T> & vertex) const; // // required by MutablePriorityQueue
+    Node(T in);
+    bool operator< (const Node<T> & Node) const; // // required by MutablePriorityQueue
     T getInfo() const;
     int getQueueIndex() const;
     double getDist() const;
-    Vertex *getPath() const;
+    Node *getPath() const;
     friend class Graph<T>;
-    friend class MutablePriorityQueue<Vertex<T>>;
+    friend class MutablePriorityQueue<Node<T>>;
 };
 
 
 
 template <class T>
 class Edge {
-    Vertex<T> *orig; 		    // Origin vertex
-    Vertex<T> * dest;           // Destination vertex
+    Node<T> *orig; 		    // Origin Node
+    Node<T> * dest;           // Destination Node
     double weight;              // Edge weight
     Edge<T> *reverse = nullptr;
 public:
-    Edge(Vertex<T> *o, Vertex<T> *d, double w);
+    Edge(Node<T> *o, Node<T> *d, double w);
     friend class Graph<T>;
-    friend class Vertex<T>;
+    friend class Node<T>;
 
     double getWeight() const;
-    Vertex<T> *getOrig() const;
-    Vertex<T> *getDest() const;
+    Node<T> *getOrig() const;
+    Node<T> *getDest() const;
 };
 
 template <class T>
 class Graph {
-    std::vector<Vertex<T> *> vertexSet;    // Vertexes
-    std::vector<std::vector<double>> floydWarshallDistanceMatrix;
-    std::vector<std::vector<int>> floydWarshallPathsMatrix;
+    std::vector<Node<T> *> NodeSet; // Nodes
+    std::vector<std::vector<double>> floydWarshallDistanceMatrix; // Matrix for the Floyd-Warshall distances
+    std::vector<std::vector<int>> floydWarshallPathsMatrix; // Matrix for the Floyd-Warshall's paths
 public:
-    Vertex<T>* findVertex(const T &in) const;
-    Vertex<T>* addVertex(const T &in);
+    Node<T>* findNode(const T &in) const;
+    Node<T>* addNode(const T &in);
     Edge<T>* addEdge(const T &sourc, const T &dest, double w);
-    std::vector<Vertex<T> *> getVertexSet() const;
+    std::vector<Node<T> *> getNodeSet() const;
     ~Graph();
 
     // Algorithms
