@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 #include "Algorithms/Graph.h"
-#include "NodeInfo.h"
+#include "Utils.h"
 
 class UnexpectedEndOfFileException {
     const std::string message;
@@ -30,7 +30,7 @@ public:
     }
 };
 
-void readFileToGraph(Graph<NodeInfo>& graph, std::string nodesFile, std::string edgesFile) {
+void readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, std::string nodesFile) {
 
     int noNodes, noEdges;
     ifstream f;
@@ -45,8 +45,9 @@ void readFileToGraph(Graph<NodeInfo>& graph, std::string nodesFile, std::string 
         if (f.eof()) throw UnexpectedEndOfFileException(std::string("Error in ") + std::string(__func__) + std::string(": unexpected enf of nodes file"));
         double latitude, longitude;
         int nodeID;
-        char uselessChar;
-        f >> uselessChar >> nodeID  >> uselessChar >> latitude >> uselessChar >> longitude >> uselessChar;
+        std::string line;
+        char uselessChar1, uselessChar2, uselessChar3, uselessChar4;
+        f >> uselessChar1 >> nodeID  >> uselessChar2 >> latitude >> uselessChar3 >> longitude >> uselessChar4;
         graph.addNode(NodeInfo(latitude, longitude, nodeID));
     }
     f.close();
@@ -65,7 +66,6 @@ void readFileToGraph(Graph<NodeInfo>& graph, std::string nodesFile, std::string 
         graph.addEdge(NodeInfo(nodeID1), NodeInfo(nodeID2), 1);
     }
     f.close();
-
 }
 
 
