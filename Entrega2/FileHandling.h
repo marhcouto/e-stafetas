@@ -22,7 +22,7 @@ public:
 };
 
 class FailedToOpenFileException {
-    std::string message;
+    const std::string message;
 public:
     explicit FailedToOpenFileException(std::string message) : message(std::move(message)) {};
     string getMessage() const {

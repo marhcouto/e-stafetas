@@ -20,6 +20,13 @@ template <class T> class Node;
 
 #define INF std::numeric_limits<double>::max()
 
+class NodeDoesNotExistException {
+    const std::string message;
+public:
+    explicit NodeDoesNotExistException(std::string &message) : message(message) {}
+    std::string getMessage() const { return message; }
+};
+
 
 template <class T>
 class Node {
@@ -51,7 +58,6 @@ public:
     friend class Graph<T>;
     friend class MutablePriorityQueue<Node<T>>;
 };
-
 
 
 template <class T>
@@ -87,7 +93,7 @@ public:
 
     // Algorithms
     void floydWarshallShortestPath();
-    void tarjan(Node<T>* node);
+    void tarjan(T info);
     int DFStarjan(Node<T>* node, int& counter);
 };
 
@@ -263,14 +269,24 @@ void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
 
 
 template <class T>
-void Graph<T>::tarjan(Node<T> *node) {
-    for (Node<T>* node : nodeSet)
+void Graph<T>::tarjan(T info) {
+    Node<T>* node = findNode(info);
+    if (node == nullptr) throw NodeDoesNotExistException(std::string("Error in ") + std::string(__func__) +
+    ": node selected does not belong to the graph");
+
+    for (Node<T>* n : nodeSet)
         node->visited = false;
 
     int numCounter = 0;
 
-    for (Node<T>* node : nodeSet)
+    for (Node<T>* n : nodeSet)
         DFStarjan(node, numCounter);
+
+    for (Node<T>* n : nodeSet) {
+        if (n->low != node->low)
+            // TODO: remove node
+            std::cout << "REMOVE NODE" << std::endl;
+    }
 }
 
 template <class T>
