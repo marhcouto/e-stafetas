@@ -33,6 +33,7 @@ public:
 template <class T>
 class Node {
     T info; // Information of the node
+    int index; // For Floyd-Warshall
     std::vector<Edge<T> *> adj; // Outgoing edges
     bool visited = false;
     bool isInStack = false; // For Tarjan's
@@ -40,7 +41,7 @@ class Node {
     int low; // For Tarjan's
     Node<T> *path = nullptr;
     int queueIndex = 0; // required by MutablePriorityQueue
-    double dist = 0;
+    double dist = 0; // For dijkstra's
 
     Edge<T> * addEdge(Node<T> *dest, double w);
     void addEdge(Edge<T>* edge);
@@ -96,6 +97,7 @@ public:
 
     // Algorithms
     void floydWarshallShortestPath();
+    std::vector<int> getfloydWarshallPath(const T &orig, const T &dest) const;
     void tarjan();
     int dfsTarjan(Node<T>* node, int& counter, std::stack<Node<T>*>& st);
     void eliminateInaccessible(const T& info);
@@ -255,9 +257,6 @@ Graph<T>::~Graph() {
 template<class T>
 void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
 
-    for (unsigned int i = 0; i < nodeSet.size(); i++)
-        nodeSet[i]->queueIndex = i;
-
     for (unsigned int i = 0; i < nodeSet.size(); i++) {
         std::vector<double> temp1;
         std::vector<int> temp2;
@@ -271,8 +270,8 @@ void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
 
     for (Node<T>* Node : nodeSet) {
         for (Edge<T>* edge : Node->adj) { //Initial fill in
-            floydWarshallDistanceMatrix[Node->queueIndex][edge->dest->queueIndex] = edge->weight;
-            floydWarshallPathsMatrix[Node->queueIndex][edge->dest->queueIndex] = edge->dest->queueIndex;
+            floydWarshallDistanceMatrix[Node->index][edge->dest->index] = edge->weight;
+            floydWarshallPathsMatrix[Node->index][edge->dest->index] = edge->dest->index;
         }
     }
 
@@ -286,6 +285,24 @@ void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
             }
         }
     }
+}
+
+template<class T>
+std::vector<int> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{ //Calculate the paths
+    std::vector<int> res;
+    Node<T>* originV = this->findVertex(orig);
+    Node<T>* destV = this->findVertex(dest);
+    if (originV == nullptr || destV == nullptr) return res;
+
+    res.push_back(orig);
+    int nextI = originV->index;
+
+    while (destV->index != nextI) {
+        nextI = floydWarshallPathsMatrix[nextI][destV->index];
+        res.push_back(findNode(nextI)->index);
+    }
+
+    return res;
 }
 
 

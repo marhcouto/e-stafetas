@@ -5,6 +5,14 @@
 #include "gtest/gtest.h"
 #include "../Algorithms/Graph.h"
 
+template <class T>
+void checkSinglePath(std::vector<T> path, std::string expected) {
+    std::stringstream ss;
+    for(unsigned int i = 0; i < path.size(); i++)
+        ss << path[i] << " ";
+    EXPECT_EQ(expected, ss.str());
+}
+
 TEST(Algorithms_test, Tarjan_test) {
     Graph<int> graph;
 
@@ -36,4 +44,30 @@ TEST(Algorithms_test, Tarjan_test) {
 
     EXPECT_NO_THROW(graph.eliminateInaccessible(1));
     EXPECT_EQ(graph.getNodeSet().size(), 4);
+}
+
+TEST(Algorithms_test, FloydWarshall_test) {
+    Graph<int> myGraph;
+
+    for(int i = 1; i <= 7; i++)
+        myGraph.addNode(i);
+
+    myGraph.addEdge(1, 2, 2);
+    myGraph.addEdge(1, 4, 7);
+    myGraph.addEdge(2, 4, 3);
+    myGraph.addEdge(2, 5, 5);
+    myGraph.addEdge(3, 1, 2);
+    myGraph.addEdge(3, 6, 5);
+    myGraph.addEdge(4, 3, 1);
+    myGraph.addEdge(4, 5, 1);
+    myGraph.addEdge(4, 6, 6);
+    myGraph.addEdge(4, 7, 4);
+    myGraph.addEdge(5, 7, 2);
+    myGraph.addEdge(6, 4, 3);
+    myGraph.addEdge(7, 6, 4);
+
+    myGraph.floydWarshallShortestPath();
+    checkSinglePath(myGraph.getfloydWarshallPath(1, 7), "1 2 4 5 7 ");
+    checkSinglePath(myGraph.getfloydWarshallPath(5, 6), "5 7 6 ");
+    checkSinglePath(myGraph.getfloydWarshallPath(7, 1), "7 6 4 3 1 ");
 }
