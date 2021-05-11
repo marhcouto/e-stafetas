@@ -4,12 +4,12 @@
 
 int main(int argc, char** argv) {
 
-    // Tests
+    /*// Tests
     std::cout << "Running all tests..." << std::endl;
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return RUN_ALL_TESTS();*/
 
-    /*std::cout << "!E-STAFETAS!" << std::endl;
+    std::cout << "!E-STAFETAS!" << std::endl;
 
     Graph<NodeInfo> graph;
 
@@ -25,5 +25,5 @@ int main(int argc, char** argv) {
 
 
 
-    return 0;*/
+    return 0;
 }

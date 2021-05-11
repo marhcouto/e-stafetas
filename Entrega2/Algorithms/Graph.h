@@ -7,11 +7,13 @@
 
 
 
+#include <utility>
 #include <vector>
 #include <queue>
 #include <limits>
 #include <algorithm>
 #include <unordered_set>
+#include <stack>
 #include "MutablePriorityQueue.h"
 
 template <class T> class Edge;
@@ -23,16 +25,17 @@ template <class T> class Node;
 class NodeDoesNotExistException {
     const std::string message;
 public:
-    explicit NodeDoesNotExistException(std::string &message) : message(message) {}
+    explicit NodeDoesNotExistException(std::string message) : message(std::move(message)) {}
     std::string getMessage() const { return message; }
 };
 
 
 template <class T>
 class Node {
-    T info; //Information of the node
-    std::vector<Edge<T> *> adj; //Outgoing edges
+    T info; // Information of the node
+    std::vector<Edge<T> *> adj; // Outgoing edges
     bool visited = false;
+    bool isInStack = false; // For Tarjan's
     int num; // For Tarjan's
     int low; // For Tarjan's
     Node<T> *path = nullptr;
@@ -43,7 +46,7 @@ class Node {
     void addEdge(Edge<T>* edge);
 public:
     Node(T in);
-
+    ~Node();
     T getInfo() const;
     int getQueueIndex() const;
     double getDist() const;
@@ -63,9 +66,9 @@ public:
 
 template <class T>
 class Edge {
-    Node<T>* orig; 		    // Origin Node
-    Node<T>* dest;           // Destination Node
-    double weight;              // Edge weight
+    Node<T>* orig; // Origin Node
+    Node<T>* dest; // Destination Node
+    double weight; // Edge weight
     // Edge<T>* reverse = nullptr;
 public:
     Edge(Node<T> *o, Node<T> *d, double w);
@@ -81,7 +84,6 @@ public:
 template <class T>
 class Graph {
     std::vector<Node<T> *> nodeSet; // Nodes
-    std::vector<Edge<T> *> edgeSet; // Edges
     std::vector<std::vector<double>> floydWarshallDistanceMatrix; // Matrix for the Floyd-Warshall distances
     std::vector<std::vector<int>> floydWarshallPathsMatrix; // Matrix for the Floyd-Warshall's paths
 public:
@@ -95,7 +97,7 @@ public:
     // Algorithms
     void floydWarshallShortestPath();
     void tarjan();
-    int DFStarjan(Node<T>* node, int& counter);
+    int dfsTarjan(Node<T>* node, int& counter, std::stack<Node<T>*>& st);
     void eliminateInaccessible(const T& info);
 };
 
@@ -104,6 +106,14 @@ public:
 
 template <class T>
 Node<T>::Node(T in): info(in) {}
+
+template <class T>
+Node<T>::~Node() {
+    for (auto iterator = adj.begin(); iterator != adj.end();) {
+        delete *iterator;
+        iterator = adj.erase(iterator);
+    }
+}
 
 template <class T>
 Edge<T> *Node<T>::addEdge(Node<T> *d, double w) {
@@ -219,7 +229,6 @@ Edge<T>* Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
         return nullptr;
     Edge<T> *e = new Edge<T>(s, d, w);
     s->addEdge(e);
-    this->edgeSet.push_back(e);
     return e;
 }
 
@@ -282,29 +291,43 @@ void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
 
 template <class T>
 void Graph<T>::tarjan() {
+    std::stack<Node<T>*> st;
 
-    for (Node<T>* n : nodeSet)
+    for (Node<T>* n : nodeSet) {
         n->visited = false;
+        n->isInStack = false;
+    }
 
     int numCounter = 0;
 
     for (Node<T>* n : nodeSet)
-        DFStarjan(n, numCounter);
+        dfsTarjan(n, numCounter, st);
 }
 
 template <class T>
-int Graph<T>::DFStarjan(Node<T> *node, int& counter) {
+int Graph<T>::dfsTarjan(Node<T> *node, int& counter, std::stack<Node<T>*>& st) {
     if (node->visited)
         return node->num;
     node->visited = true;
+    node->isInStack = true;
+    st.push(node);
     counter++;
     node->low = counter;
     node->num = counter;
 
     for (Edge<T>* edge : node->adj) {
-        int temp = DFStarjan(edge->dest, counter);
-        if (temp < node->low)
+        int temp = dfsTarjan(edge->dest, counter, st);
+        if (temp < node->low && edge->dest->isInStack)
             node->low = temp;
+    }
+    if (node->low == node->num) {
+        while(node != st.top()) {
+            st.top()->low = node->low;
+            st.top()->isInStack = false;
+            st.pop();
+        }
+        st.top()->isInStack = false;
+        st.pop();
     }
     return node->low;
 }
@@ -316,8 +339,10 @@ void Graph<T>::eliminateInaccessible(const T &info) {
                                                          ": node selected does not belong to the graph");
 
     for (auto iterator = nodeSet.begin(); iterator != nodeSet.end();) {
-        if ((*iterator)->low != node->low)
+        if ((*iterator)->low != node->low) {
+            delete *iterator;
             iterator = nodeSet.erase(iterator);
+        }
         else
             iterator++;
     }
