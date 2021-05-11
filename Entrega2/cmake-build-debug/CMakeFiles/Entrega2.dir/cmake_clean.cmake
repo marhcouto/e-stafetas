@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "../Entrega2.exe"
   "../Entrega2.exe.manifest"
   "../Entrega2.pdb"
+  "CMakeFiles/Entrega2.dir/Tests/TarjanTest.cpp.obj"
   "CMakeFiles/Entrega2.dir/main.cpp.obj"
   "libEntrega2.dll.a"
 )

@@ -33,7 +33,6 @@ class Node {
     T info; //Information of the node
     std::vector<Edge<T> *> adj; //Outgoing edges
     bool visited = false;
-    bool unachievable = false; // For Tarjan's
     int num; // For Tarjan's
     int low; // For Tarjan's
     Node<T> *path = nullptr;
@@ -48,7 +47,9 @@ public:
     T getInfo() const;
     int getQueueIndex() const;
     double getDist() const;
-    Node *getPath() const;
+    const Node *getPath() const;
+    int getNum() const;
+    int getLow() const;
     bool getVisited() const;
     void setVisited(bool visited);
     const vector<Edge<T> *> &getAdj() const;
@@ -93,8 +94,9 @@ public:
 
     // Algorithms
     void floydWarshallShortestPath();
-    void tarjan(T info);
+    void tarjan();
     int DFStarjan(Node<T>* node, int& counter);
+    void eliminateInaccessible(const T& info);
 };
 
 
@@ -136,7 +138,7 @@ int Node<T>::getQueueIndex() const {
 }
 
 template <class T>
-Node<T> *Node<T>::getPath() const {
+const Node<T> *Node<T>::getPath() const {
     return this->path;
 }
 
@@ -153,6 +155,16 @@ void Node<T>::setVisited(bool visited) {
 template<class T>
 bool Node<T>::getVisited() const {
     return visited;
+}
+
+template<class T>
+int Node<T>::getNum() const {
+    return num;
+}
+
+template<class T>
+int Node<T>::getLow() const {
+    return low;
 }
 
 
@@ -269,24 +281,15 @@ void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
 
 
 template <class T>
-void Graph<T>::tarjan(T info) {
-    Node<T>* node = findNode(info);
-    if (node == nullptr) throw NodeDoesNotExistException(std::string("Error in ") + std::string(__func__) +
-    ": node selected does not belong to the graph");
+void Graph<T>::tarjan() {
 
     for (Node<T>* n : nodeSet)
-        node->visited = false;
+        n->visited = false;
 
     int numCounter = 0;
 
     for (Node<T>* n : nodeSet)
-        DFStarjan(node, numCounter);
-
-    for (Node<T>* n : nodeSet) {
-        if (n->low != node->low)
-            // TODO: remove node
-            std::cout << "REMOVE NODE" << std::endl;
-    }
+        DFStarjan(n, numCounter);
 }
 
 template <class T>
@@ -304,6 +307,20 @@ int Graph<T>::DFStarjan(Node<T> *node, int& counter) {
             node->low = temp;
     }
     return node->low;
+}
+
+template<class T>
+void Graph<T>::eliminateInaccessible(const T &info) {
+    Node<T>* node = findNode(info);
+    if (node == nullptr) throw NodeDoesNotExistException(std::string("Error in ") + std::string(__func__) +
+                                                         ": node selected does not belong to the graph");
+
+    for (auto iterator = nodeSet.begin(); iterator != nodeSet.end();) {
+        if ((*iterator)->low != node->low)
+            iterator = nodeSet.erase(iterator);
+        else
+            iterator++;
+    }
 }
 
 #endif //ENTREGA2_GRAPH_H

@@ -24,12 +24,11 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googlemock/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/GraphViewerCpp/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/GraphViewerCpp/SFML/include"/>
-					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googlemock/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googletest/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googletest"/>
-					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googlemock"/>
 					<Add directory="C:/mingw64/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++"/>
 					<Add directory="C:/mingw64/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32"/>
 					<Add directory="C:/mingw64/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward"/>
@@ -51,12 +50,11 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googlemock/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/GraphViewerCpp/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/GraphViewerCpp/SFML/include"/>
-					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googlemock/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googletest/include"/>
 					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googletest"/>
-					<Add directory="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/lib/googletest-master/googlemock"/>
 					<Add directory="C:/mingw64/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++"/>
 					<Add directory="C:/mingw64/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32"/>
 					<Add directory="C:/mingw64/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward"/>
@@ -707,6 +705,9 @@
 			<Option target="Entrega2"/>
 		</Unit>
 		<Unit filename="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/FileHandling.h">
+			<Option target="Entrega2"/>
+		</Unit>
+		<Unit filename="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/Tests/TarjanTest.cpp">
 			<Option target="Entrega2"/>
 		</Unit>
 		<Unit filename="C:/Users/marhc/Documents/feup/4/CAL/ProjetoCAL-FEUP/Entrega2/Utils.h">

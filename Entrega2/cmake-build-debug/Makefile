@@ -330,6 +330,33 @@ sfml-audio/fast:
 	$(MAKE) $(MAKESILENT) -f lib\GraphViewerCpp\SFML\src\SFML\Audio\CMakeFiles\sfml-audio.dir\build.make lib/GraphViewerCpp/SFML/src/SFML/Audio/CMakeFiles/sfml-audio.dir/build
 .PHONY : sfml-audio/fast
 
+Tests/TarjanTest.obj: Tests/TarjanTest.cpp.obj
+
+.PHONY : Tests/TarjanTest.obj
+
+# target to build an object file
+Tests/TarjanTest.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Entrega2.dir\build.make CMakeFiles/Entrega2.dir/Tests/TarjanTest.cpp.obj
+.PHONY : Tests/TarjanTest.cpp.obj
+
+Tests/TarjanTest.i: Tests/TarjanTest.cpp.i
+
+.PHONY : Tests/TarjanTest.i
+
+# target to preprocess a source file
+Tests/TarjanTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Entrega2.dir\build.make CMakeFiles/Entrega2.dir/Tests/TarjanTest.cpp.i
+.PHONY : Tests/TarjanTest.cpp.i
+
+Tests/TarjanTest.s: Tests/TarjanTest.cpp.s
+
+.PHONY : Tests/TarjanTest.s
+
+# target to generate assembly for a file
+Tests/TarjanTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Entrega2.dir\build.make CMakeFiles/Entrega2.dir/Tests/TarjanTest.cpp.s
+.PHONY : Tests/TarjanTest.cpp.s
+
 main.obj: main.cpp.obj
 
 .PHONY : main.obj
@@ -381,6 +408,9 @@ help:
 	@echo ... sfml-network
 	@echo ... sfml-system
 	@echo ... sfml-window
+	@echo ... Tests/TarjanTest.obj
+	@echo ... Tests/TarjanTest.i
+	@echo ... Tests/TarjanTest.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
