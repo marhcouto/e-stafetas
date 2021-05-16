@@ -19,7 +19,7 @@ set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 include_directories(include)
 
 add_library(graphviewer STATIC
-    src/graphviewer.cpp
+        src/GVMaker.cpp
     src/node.cpp
     src/edge.cpp
     src/lines.cpp

@@ -21,6 +21,7 @@ template <class T> class Graph;
 template <class T> class Node;
 
 #define INF std::numeric_limits<double>::max()
+#define INTINF std::numeric_limits<int>::max()
 
 class NodeDoesNotExistException {
     const std::string message;
@@ -33,7 +34,8 @@ public:
 template <class T>
 class Node {
     T info; // Information of the node
-    int index; // For Floyd-Warshall
+    const int id;
+    int idM; // For Shortest-paths matrixes
     std::vector<Edge<T> *> adj; // Outgoing edges
     bool visited = false;
     bool isInStack = false; // For Tarjan's
@@ -46,15 +48,19 @@ class Node {
     Edge<T> * addEdge(Node<T> *dest, double w);
     void addEdge(Edge<T>* edge);
 public:
-    Node(T in);
-    ~Node();
+    Node(T in, int id);
+    //~Node();
+
     T getInfo() const;
     int getQueueIndex() const;
     double getDist() const;
     const Node *getPath() const;
     int getNum() const;
     int getLow() const;
+    const int getId() const;
+    int getIDM() const;
     bool getVisited() const;
+    void setPath(Node<T>* path);
     void setVisited(bool visited);
     const vector<Edge<T> *> &getAdj() const;
 
@@ -70,7 +76,6 @@ class Edge {
     Node<T>* orig; // Origin Node
     Node<T>* dest; // Destination Node
     double weight; // Edge weight
-    // Edge<T>* reverse = nullptr;
 public:
     Edge(Node<T> *o, Node<T> *d, double w);
 
@@ -85,37 +90,48 @@ public:
 template <class T>
 class Graph {
     std::vector<Node<T> *> nodeSet; // Nodes
-    std::vector<std::vector<double>> floydWarshallDistanceMatrix; // Matrix for the Floyd-Warshall distances
-    std::vector<std::vector<int>> floydWarshallPathsMatrix; // Matrix for the Floyd-Warshall's paths
+    std::vector<std::vector<double>> distanceMatrix; // Matrix for the Floyd-Warshall distances
+    std::vector<std::vector<int>> pathsMatrix; // Matrix for the Floyd-Warshall's paths
 public:
-    Node<T>* findNode(const T &in) const;
-    Node<T>* addNode(const T &in);
-    Edge<T>* addEdge(const T &sourc, const T &dest, double w);
+    Node<T>* findNode(int id) const;
+    Node<T>* findNodeMatrixId(int idM) const; // To find a node through its matrix id
+    Node<T>* addNode(const T &in, int id);
+    Edge<T>* addEdge(int id1, int idM, double w);
+    Edge<T>* addEdge(Node<T>* node1, Node<T>* node2, double w);
     std::vector<Node<T> *> getNodeSet() const;
-    std::vector<Edge<T> *> getEdgeSet() const;
     ~Graph();
 
     // Algorithms
+
+    // Shortest Path
     void floydWarshallShortestPath();
-    std::vector<int> getfloydWarshallPath(const T &orig, const T &dest) const;
+    void dijkstraMulti();
+    void updatePaths(int id);
+
+    // Connectivity
     void tarjan();
     int dfsTarjan(Node<T>* node, int& counter, std::stack<Node<T>*>& st);
-    void eliminateInaccessible(const T& info);
+
+    // Utils
+    void printMatrixes();
+    void eliminateInaccessible(int id);
+    void assignIDM();
+    std::vector<int> getShortestPath(int s, int d) const;
 };
 
 
 // N O D E
 
 template <class T>
-Node<T>::Node(T in): info(in) {}
+Node<T>::Node(T in, int id): info(in), id(id) {}
 
-template <class T>
+/*template <class T>
 Node<T>::~Node() {
-    for (auto iterator = adj.begin(); iterator != adj.end();) {
-        delete *iterator;
+    for (typename std::vector<Edge<T>*>::iterator iterator = adj.begin(); iterator != adj.end();) {
+        // delete *iterator;
         iterator = adj.erase(iterator);
     }
-}
+}*/
 
 template <class T>
 Edge<T> *Node<T>::addEdge(Node<T> *d, double w) {
@@ -164,6 +180,11 @@ void Node<T>::setVisited(bool visited) {
     this->visited = visited;
 }
 
+template <class T>
+void Node<T>::setPath(Node<T>* path) {
+    this->path = path;
+}
+
 template<class T>
 bool Node<T>::getVisited() const {
     return visited;
@@ -177,6 +198,16 @@ int Node<T>::getNum() const {
 template<class T>
 int Node<T>::getLow() const {
     return low;
+}
+
+template<class T>
+const int Node<T>::getId() const {
+    return id;
+}
+
+template<class T>
+int Node<T>::getIDM() const {
+    return idM;
 }
 
 
@@ -209,24 +240,26 @@ std::vector<Node<T> *> Graph<T>::getNodeSet() const {
 }
 
 template <class T>
-std::vector<Edge<T> *> Graph<T>::getEdgeSet() const {
-    return this->edgeSet;
-}
-
-template <class T>
-Node<T>* Graph<T>::addNode(const T &in) {
-    Node<T> *v = findNode(in);
+Node<T>* Graph<T>::addNode(const T &in, int id) {
+    Node<T> *v = findNode(id);
     if (v != nullptr)
         return v;
-    v = new Node<T>(in);
+    v = new Node<T>(in, id);
     nodeSet.push_back(v);
     return v;
 }
 
 template <class T>
-Edge<T>* Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
-    auto s = findNode(sourc);
-    auto d = findNode(dest);
+Edge<T>* Graph<T>::addEdge(Node<T>* node1, Node<T>* node2, double w) {
+    Edge<T> *e = new Edge<T>(node1, node2, w);
+    node1->addEdge(e);
+    return e;
+}
+
+template <class T>
+Edge<T>* Graph<T>::addEdge(int id1, int id2, double w) {
+    auto s = findNode(id1);
+    auto d = findNode(id2);
     if (s == nullptr || d == nullptr)
         return nullptr;
     Edge<T> *e = new Edge<T>(s, d, w);
@@ -235,9 +268,17 @@ Edge<T>* Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
 }
 
 template <class T>
-Node<T>* Graph<T>::findNode(const T & inf) const {
+Node<T>* Graph<T>::findNode(int id) const {
     for (auto v : nodeSet)
-        if (v->info == inf)
+        if (v->id == id)
+            return v;
+    return nullptr;
+}
+
+template <class T>
+Node<T>* Graph<T>::findNodeMatrixId(int idM) const {
+    for (auto v : nodeSet)
+        if (v->idM == idM)
             return v;
     return nullptr;
 }
@@ -254,6 +295,91 @@ Graph<T>::~Graph() {
 
 // A L G O R I T H M S
 
+template <class T>
+void Graph<T>::dijkstraMulti() {
+
+    for (unsigned int i = 0; i < nodeSet.size(); i++) {
+        std::vector<double> temp1;
+        std::vector<int> temp2;
+        for (unsigned int j = 0; j < nodeSet.size(); j++) {
+            temp1.push_back(INF);
+            temp2.push_back(0);
+        }
+        distanceMatrix.push_back(temp1); //Weights
+        pathsMatrix.push_back(temp2); //Paths
+    }
+
+    for (unsigned int i = 0; i < nodeSet.size(); i++) {
+        for (unsigned int j = 0; j < nodeSet.size(); j++) {
+            distanceMatrix[i][j] = INF;
+            pathsMatrix[i][j] = INTINF;
+        }
+    }
+
+    for (Node<T>* node : nodeSet) {
+
+        for (Node<T>* n : nodeSet) {
+            n->visited = false;
+            n->queueIndex = 0;
+            n->dist = INF;
+            n->path = NULL;
+        }
+
+        MutablePriorityQueue<Node<T>> nodeQueue;
+        distanceMatrix[node->getId() - 1][node->getId() - 1] = 0;
+        pathsMatrix[node->getId() - 1][node->getId() - 1] = node->getId();
+        node->dist = 0;
+        nodeQueue.insert(node);
+        while(!nodeQueue.empty()) {
+            Node<T>* node1 = nodeQueue.extractMin();
+            node->visited = true;
+            for (Edge<T>* edge : node1->adj) {
+                if (edge->dest->dist > node1->dist + edge->weight && !edge->dest->visited) {
+                    double oldDist = edge->dest->dist;
+                    edge->dest->dist = node1->dist + edge->weight;
+                    edge->dest->path = node1;
+                    distanceMatrix[node->getId() - 1][edge->dest->getId() - 1] = edge->dest->dist;
+                    pathsMatrix[node1->getId() - 1][edge->dest->getId() - 1] = pathsMatrix[node->getId() - 1][node1->getId() - 1];
+                    if (oldDist == INF) {
+                        nodeQueue.insert(edge->dest);
+                    }
+                    else
+                        nodeQueue.decreaseKey(edge->dest);
+                }
+            }
+        }
+        updatePaths(node->getIDM());
+    }
+}
+
+template <class T>
+void Graph<T>::updatePaths(int idM) {
+    // Id of the origin node for the paths
+    Node<T>* origin = findNodeMatrixId(idM);
+    if (origin == nullptr) return;
+
+    for (Node<T>* node : nodeSet) {
+        if (node->getIDM() == idM) {
+            pathsMatrix[idM][idM] = 0;
+            continue;
+        }
+        Node<T>* node1 = node;
+        std::stack<int> st;
+        while (node1->getIDM() != idM) {
+            if (node1->path == NULL) break;
+            st.push(node1->getIDM());
+            node1 = node1->path;
+        }
+        int id1 = idM;
+        int id2 = node->getIDM();
+        while (!st.empty()) {
+            pathsMatrix[id1][node->getIDM()] = st.top();
+            id1 = st.top();
+            st.pop();
+        }
+    }
+}
+
 template<class T>
 void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
 
@@ -264,47 +390,30 @@ void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
             temp1.push_back(INF);
             temp2.push_back(0);
         }
-        floydWarshallDistanceMatrix.push_back(temp1); //Weights
-        floydWarshallPathsMatrix.push_back(temp2); //Paths
+        distanceMatrix.push_back(temp1); //Weights
+        pathsMatrix.push_back(temp2); //Paths
     }
 
-    for (Node<T>* Node : nodeSet) {
-        for (Edge<T>* edge : Node->adj) { //Initial fill in
-            floydWarshallDistanceMatrix[Node->index][edge->dest->index] = edge->weight;
-            floydWarshallPathsMatrix[Node->index][edge->dest->index] = edge->dest->index;
+    for (Node<T>* node : nodeSet) {
+        distanceMatrix[node->getIDM()][node->getIDM()] = 0;
+        pathsMatrix[node->getIDM()][node->getIDM()] = node->getIDM();
+        for (Edge<T>* edge : node->adj) { //Initial fill in
+            distanceMatrix[node->idM][edge->dest->idM] = edge->weight;
+            pathsMatrix[node->idM][edge->dest->idM] = edge->dest->idM;
         }
     }
-
     for (unsigned int i = 0; i < nodeSet.size(); i++) {
         for (unsigned int j = 0; j < nodeSet.size(); j++) {
             for (unsigned int k = 0; k < nodeSet.size(); k++) {
-                if (floydWarshallDistanceMatrix[j][k] > floydWarshallDistanceMatrix[j][i] + floydWarshallDistanceMatrix[i][k]) { //Checks if going through i makes the path shorter
-                    floydWarshallDistanceMatrix[j][k] = floydWarshallDistanceMatrix[j][i] + floydWarshallDistanceMatrix[i][k];
-                    floydWarshallPathsMatrix[j][k] = floydWarshallPathsMatrix[j][i];
+                if (distanceMatrix[j][k] > distanceMatrix[j][i] + distanceMatrix[i][k]) { //Checks if going through i makes the path shorter
+                    distanceMatrix[j][k] = distanceMatrix[j][i] + distanceMatrix[i][k];
+                    pathsMatrix[j][k] = pathsMatrix[j][i];
                 }
             }
         }
     }
+    this->printMatrixes();
 }
-
-template<class T>
-std::vector<int> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{ //Calculate the paths
-    std::vector<int> res;
-    Node<T>* originV = this->findVertex(orig);
-    Node<T>* destV = this->findVertex(dest);
-    if (originV == nullptr || destV == nullptr) return res;
-
-    res.push_back(orig);
-    int nextI = originV->index;
-
-    while (destV->index != nextI) {
-        nextI = floydWarshallPathsMatrix[nextI][destV->index];
-        res.push_back(findNode(nextI)->index);
-    }
-
-    return res;
-}
-
 
 template <class T>
 void Graph<T>::tarjan() {
@@ -349,9 +458,11 @@ int Graph<T>::dfsTarjan(Node<T> *node, int& counter, std::stack<Node<T>*>& st) {
     return node->low;
 }
 
+// UTILS FOR ALGORITHMS
+
 template<class T>
-void Graph<T>::eliminateInaccessible(const T &info) {
-    Node<T>* node = findNode(info);
+void Graph<T>::eliminateInaccessible(int id) {
+    Node<T>* node = findNode(id);
     if (node == nullptr) throw NodeDoesNotExistException(std::string("Error in ") + std::string(__func__) +
                                                          ": node selected does not belong to the graph");
 
@@ -364,5 +475,54 @@ void Graph<T>::eliminateInaccessible(const T &info) {
             iterator++;
     }
 }
+
+template <class T>
+void Graph<T>::printMatrixes() {
+    for (unsigned int i = 0; i < nodeSet.size(); i++) {
+        for (unsigned int j = 0; j < nodeSet.size(); j++) {
+            std::cout << distanceMatrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    for (unsigned int i = 0; i < nodeSet.size(); i++) {
+        for (unsigned int j = 0; j < nodeSet.size(); j++) {
+            std::cout << pathsMatrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+template<class T>
+std::vector<int> Graph<T>::getShortestPath(int s, int d) const{ //Calculate the paths
+    std::vector<int> res;
+    Node<T>* originV = this->findNode(s);
+    Node<T>* destV = this->findNode(d);
+    if (originV == nullptr || destV == nullptr) return res;
+
+    res.push_back(originV->id);
+    int nextI = originV->idM;
+
+    while (destV->idM != nextI) {
+        nextI = pathsMatrix[nextI][destV->idM];
+        res.push_back(findNodeMatrixId(nextI)->id);
+    }
+
+    return res;
+}
+
+template <class T>
+void Graph<T>::assignIDM() {
+    int counter = 0;
+    for (Node<T>* node : nodeSet) {
+        node->idM = counter;
+        counter++;
+    }
+}
+
+
+
 
 #endif //ENTREGA2_GRAPH_H

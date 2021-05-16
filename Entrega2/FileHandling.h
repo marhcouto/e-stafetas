@@ -8,8 +8,9 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <iomanip>
 #include "Algorithms/Graph.h"
-#include "Utils.h"
+#include "NodesInfo.h"
 
 class UnexpectedEndOfFileException {
     const std::string message;
@@ -32,11 +33,13 @@ public:
 
 void readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, std::string nodesFile) {
 
+    setprecision(8);
+
     int noNodes, noEdges;
     ifstream f;
 
     // Nodes
-    f.open("GraphFiles/" + nodesFile, std::ifstream::in);
+    f.open("../../GraphFiles/" + nodesFile, std::ifstream::in);
     if (f.fail()) throw FailedToOpenFileException(std::string("Error in ") + std::string(__func__) + std::string(": unable to open nodes file"));
 
     f >> noNodes;
@@ -48,12 +51,12 @@ void readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, std::string 
         std::string line;
         char uselessChar1, uselessChar2, uselessChar3, uselessChar4;
         f >> uselessChar1 >> nodeID  >> uselessChar2 >> latitude >> uselessChar3 >> longitude >> uselessChar4;
-        graph.addNode(NodeInfo(latitude, longitude, nodeID));
+        graph.addNode(NodeInfo(latitude, longitude), nodeID);
     }
     f.close();
 
     // Edges
-    f.open("GraphFiles/" + edgesFile, std::ifstream::in);
+    f.open("../../GraphFiles/" + edgesFile, std::ifstream::in);
     if (f.fail()) throw FailedToOpenFileException(std::string("Error in ") + std::string(__func__) + std::string(": unable to open edges file"));
 
     f >> noEdges;
@@ -63,9 +66,13 @@ void readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, std::string 
         int nodeID1, nodeID2;
         char uselessChar;
         f >> uselessChar >> nodeID1 >> uselessChar >> nodeID2 >> uselessChar;
-        graph.addEdge(NodeInfo(nodeID1), NodeInfo(nodeID2), 1);
+        Node<NodeInfo>* node1 = graph.findNode(nodeID1);
+        Node<NodeInfo>* node2 = graph.findNode(nodeID2);
+        graph.addEdge(node1, node2, getDistance(node1->getInfo().getLatitude(), node1->getInfo().getLongitude(),
+                                                                        node2->getInfo().getLatitude(), node2->getInfo().getLongitude()));
     }
     f.close();
+
 }
 
 

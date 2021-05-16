@@ -1,20 +1,24 @@
 #include <iostream>
+#include <iomanip>
 #include "FileHandling.h"
-#include "gtest/gtest.h"
+#include "GVMaker.h"
 
 int main(int argc, char** argv) {
 
-    /*// Tests
-    std::cout << "Running all tests..." << std::endl;
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();*/
+
+    std::cout << setprecision(10);
+    //std::string edgesFile, nodesFile;
 
     std::cout << "!E-STAFETAS!" << std::endl;
+    /*std::cout << "Edges file:" << std::endl;
+    std::cin >> edgesFile;
+    std::cout << "Nodes file:" << std::endl;
+    std::cin >> nodesFile;*/
 
     Graph<NodeInfo> graph;
 
     try {
-        readFileToGraph(graph, "edges.txt", "nodes.txt");
+        readFileToGraph(graph, "edges_porto.txt", "nodes_x_y_porto.txt");
     } catch (FailedToOpenFileException e) {
         std::cout << e.getMessage() << std::endl;
     } catch (UnexpectedEndOfFileException e) {
@@ -22,8 +26,6 @@ int main(int argc, char** argv) {
     }
 
     graphViewerMaker(graph);
-
-
 
     return 0;
 }
