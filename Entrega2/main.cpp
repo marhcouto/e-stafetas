@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     Graph<NodeInfo> graph;
 
     try {
-        readFileToGraph(graph, "edges_porto.txt", "nodes_x_y_porto.txt");
+        FileReader::readFileToGraph(graph, "edges_porto.txt", "nodes_x_y_porto.txt");
     } catch (FailedToOpenFileException e) {
         std::cout << e.getMessage() << std::endl;
     } catch (UnexpectedEndOfFileException e) {

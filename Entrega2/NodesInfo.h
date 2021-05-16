@@ -31,6 +31,11 @@ public:
         NodeInfo::type = type;
     }
 
+    // Euclidian distance
+    static double getDistance(double lat1, double long1, double lat2, double long2) {
+        return std::sqrt(std::pow(lat1 - lat2, 2) + std::pow(long1 - long2, 2));
+    }
+
     bool operator==(const NodeInfo& nodeInfo) const {
         return this->getLatitude() == nodeInfo.getLatitude() && this->getLongitude() == nodeInfo.getLongitude();
     }
@@ -40,11 +45,6 @@ public:
     }
 };
 
-
-// Euclidian distance with latitude
-double getDistance(double lat1, double long1, double lat2, double long2) {
-    return std::sqrt(std::pow(lat1 - lat2, 2) + std::pow(long1 - long2, 2));
-}
 
 
 #endif //ENTREGA2_NODESINFO_H

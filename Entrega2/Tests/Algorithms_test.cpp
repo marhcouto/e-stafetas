@@ -3,7 +3,8 @@
 //
 
 #include "gtest/gtest.h"
-#include "../Algorithms/Graph.h"
+//#include "../Algorithms/Graph.h"
+#include "../FileHandling.h"
 
 template <class T>
 void checkSinglePath(std::vector<T> path, std::string expected) {
@@ -72,9 +73,11 @@ TEST(Algorithms_test, FloydWarshall_test) {
     checkSinglePath(myGraph.getShortestPath(1, 7), "1 2 4 5 7 ");
     checkSinglePath(myGraph.getShortestPath(5, 6), "5 7 6 ");
     checkSinglePath(myGraph.getShortestPath(7, 1), "7 6 4 3 1 ");
+
+    myGraph.printMatrixes();
 }
 
-TEST(Alforithms_test, MultiDijkstras_test) {
+TEST(Algorithms_test, MultiDijkstras_test) {
     Graph<std::string> myGraph;
 
     for(int i = 1; i <= 7; i++)
@@ -100,5 +103,8 @@ TEST(Alforithms_test, MultiDijkstras_test) {
     checkSinglePath(myGraph.getShortestPath(1, 7), "1 2 4 5 7 ");
     checkSinglePath(myGraph.getShortestPath(5, 6), "5 7 6 ");
     checkSinglePath(myGraph.getShortestPath(7, 1), "7 6 4 3 1 ");
+
+    myGraph.printMatrixes();
 }
+
 

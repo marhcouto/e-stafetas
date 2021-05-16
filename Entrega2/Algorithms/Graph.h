@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <unordered_set>
 #include <stack>
+#include <iostream>
 #include "MutablePriorityQueue.h"
 
 template <class T> class Edge;
@@ -111,6 +112,11 @@ public:
     // Connectivity
     void tarjan();
     int dfsTarjan(Node<T>* node, int& counter, std::stack<Node<T>*>& st);
+
+    // Clustering
+    std::vector<std::vector<Node<T>*>> clustering(std::vector<Node<T>*> nodes, int noSets); // TODO NOT TESTED
+    double getSetDistances(std::vector<Node<T>*> v1, std::vector<Node<T>*> v2);
+    void mergeSets(std::vector<std::vector<Node<T>*>> clusters, int i, int j);
 
     // Utils
     void printMatrixes();
@@ -326,8 +332,7 @@ void Graph<T>::dijkstraMulti() {
         }
 
         MutablePriorityQueue<Node<T>> nodeQueue;
-        distanceMatrix[node->getId() - 1][node->getId() - 1] = 0;
-        pathsMatrix[node->getId() - 1][node->getId() - 1] = node->getId();
+        distanceMatrix[node->getIDM()][node->getIDM()] = 0;
         node->dist = 0;
         nodeQueue.insert(node);
         while(!nodeQueue.empty()) {
@@ -338,8 +343,7 @@ void Graph<T>::dijkstraMulti() {
                     double oldDist = edge->dest->dist;
                     edge->dest->dist = node1->dist + edge->weight;
                     edge->dest->path = node1;
-                    distanceMatrix[node->getId() - 1][edge->dest->getId() - 1] = edge->dest->dist;
-                    pathsMatrix[node1->getId() - 1][edge->dest->getId() - 1] = pathsMatrix[node->getId() - 1][node1->getId() - 1];
+                    distanceMatrix[node->getIDM()][edge->dest->getIDM()] = edge->dest->dist;
                     if (oldDist == INF) {
                         nodeQueue.insert(edge->dest);
                     }
@@ -360,7 +364,7 @@ void Graph<T>::updatePaths(int idM) {
 
     for (Node<T>* node : nodeSet) {
         if (node->getIDM() == idM) {
-            pathsMatrix[idM][idM] = 0;
+            pathsMatrix[idM][idM] = idM;
             continue;
         }
         Node<T>* node1 = node;
@@ -412,7 +416,6 @@ void Graph<T>::floydWarshallShortestPath() { //Makes matrix with all paths
             }
         }
     }
-    this->printMatrixes();
 }
 
 template <class T>
@@ -458,6 +461,52 @@ int Graph<T>::dfsTarjan(Node<T> *node, int& counter, std::stack<Node<T>*>& st) {
     return node->low;
 }
 
+template <class T>
+std::vector<std::vector<Node<T>*>> Graph<T>::clustering(std::vector<Node<T>*> nodes, int noSets) {
+    std::vector<std::vector<Node<T>*>> clusters;
+    for (Node<T>* node : nodes) {
+        std::vector<Node<T>*> temp;
+        temp.push_back(node);
+        clusters.push_back(temp);
+    }
+    while (clusters.size() > noSets) {
+        double bestDist = INF;
+        int i1, j1;
+        for (unsigned int i = 0; i < clusters.size(); i++) {
+            for (unsigned int j = 0; j < clusters.size() && i != j; j++) {
+                double possibleDist = getSetDistances(clusters[i], clusters[j]);
+                if (bestDist > possibleDist) {
+                    bestDist = possibleDist;
+                    i1 = i;
+                    j1 = j;
+                }
+            }
+        }
+        mergeSets(clusters, i1, j1);
+    }
+    return clusters;
+}
+
+template <class T>
+double Graph<T>::getSetDistances(std::vector<Node<T>*> v1, std::vector<Node<T>*> v2) {
+    double bestDistance = INF;
+    for (Node<T>* n1 : v1) {
+        for (Node<T>* n2 : v2) {
+            double possibleDistance = (distanceMatrix[n1->getIDM()][n2->getIDM()] + distanceMatrix[n2->getIDM()][n1->getIDM()]) / 2;
+            if (possibleDistance < bestDistance)
+                bestDistance = possibleDistance;
+        }
+    }
+    return bestDistance;
+}
+
+template <class T>
+void Graph<T>::mergeSets(std::vector<std::vector<Node<T>*>> clusters, int i, int j) {
+    clusters[i].insert(clusters[i].end(), clusters[j].begin(), clusters[j].end());
+    clusters.erase(clusters.begin() + j);
+}
+
+
 // UTILS FOR ALGORITHMS
 
 template<class T>
@@ -485,7 +534,7 @@ void Graph<T>::printMatrixes() {
         std::cout << std::endl;
     }
 
-    std::cout << std::endl;
+    std::cout << "\n\n\n";
 
     for (unsigned int i = 0; i < nodeSet.size(); i++) {
         for (unsigned int j = 0; j < nodeSet.size(); j++) {
