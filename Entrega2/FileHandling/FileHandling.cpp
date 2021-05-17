@@ -5,7 +5,7 @@
 #include "FileHandling.h"
 
 
-void FileReader::readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, std::string nodesFile) {
+void FileReader::readFileToGraph(Graph& graph, std::string edgesFile, std::string nodesFile) {
 
     setprecision(8);
 
@@ -40,15 +40,15 @@ void FileReader::readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, 
         int nodeID1, nodeID2;
         char uselessChar;
         f >> uselessChar >> nodeID1 >> uselessChar >> nodeID2 >> uselessChar;
-        Node<NodeInfo>* node1 = graph.findNode(nodeID1);
-        Node<NodeInfo>* node2 = graph.findNode(nodeID2);
+        Node* node1 = graph.findNode(nodeID1);
+        Node* node2 = graph.findNode(nodeID2);
         graph.addEdge(node1, node2, NodeInfo::getDistance(node1->getInfo().getLatitude(), node1->getInfo().getLongitude(),
                                                           node2->getInfo().getLatitude(), node2->getInfo().getLongitude()));
     }
     f.close();
 }
 
-void FileReader::readOrders(Graph<NodeInfo> &graph, std::string file) {
+void FileReader::readOrders(Graph &graph, std::string file) {
     std::ifstream f;
 
     f.open("../../GraphFiles/" + file, std::ifstream::in);

@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <cmath>
-#include "Algorithms/Graph.h"
+#include "Graph.h"
 
 typedef enum {RECHARGE, DELIVERY, PICKUP, NONE, GARAGE} interest;
 

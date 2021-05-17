@@ -4,11 +4,11 @@
 
 #include <chrono>
 #include "gtest/gtest.h"
-#include "../SaveFiles/FileHandling.h"
+#include "../FileHandling/FileHandling.h"
 
 TEST(Speed_test, Shortest_Path_test) {
-    Graph<NodeInfo> graph1;
-    Graph<NodeInfo> graph2;
+    Graph graph1;
+    Graph graph2;
 
     ASSERT_NO_THROW(FileReader::readFileToGraph(graph1, "edges.txt", "nodes.txt"));
     ASSERT_NO_THROW(FileReader::readFileToGraph(graph2, "edges.txt", "nodes.txt"));
@@ -28,12 +28,15 @@ TEST(Speed_test, Shortest_Path_test) {
 }
 
 TEST(Speed_test, Connectivity_test) {
-    Graph<NodeInfo> graph1;
+    Graph graph1;
 
     ASSERT_NO_THROW(FileReader::readFileToGraph(graph1, "porto_full_edges.txt", "porto_full_nodes_xy.txt"));
 
     graph1.assignIDM();
+    auto time1 = std::chrono::high_resolution_clock::now();
     graph1.tarjan();
     graph1.eliminateInaccessible(1);
-    std::cout << graph1.getNodeSet().size() << std::endl;
+    auto time2 = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Tarjan:" << std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count() << std::endl;
 }

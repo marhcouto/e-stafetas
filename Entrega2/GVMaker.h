@@ -10,24 +10,24 @@
 #include "sstream"
 
 // To check the graph's state
-void graphViewerMaker(Graph<NodeInfo> graph) {
+void graphViewerMaker(Graph graph) {
 
     int counterID = 0;
     GraphViewer gv;
 
     gv.setCenter(sf::Vector2f(1000, 1000));
 
-    for (Node<NodeInfo>* node : graph.getNodeSet())
+    for (Node* node : graph.getNodeSet())
         node->setVisited(false);
 
-    for (Node<NodeInfo>* node : graph.getNodeSet()) {
+    for (Node* node : graph.getNodeSet()) {
         int id1, id2;
         id1 = node->getId();
         if (!node->getVisited()) {
             GraphViewer::Node& node1 = gv.addNode(node->getId(),sf::Vector2f((long) node->getInfo().getLatitude(), (long) node->getInfo().getLongitude()));
             node->setVisited(true);
         }
-        for (Edge<NodeInfo>* edge : node->getAdj()) {
+        for (Edge* edge : node->getAdj()) {
             id2 = edge->getDest()->getId();
             if (!edge->getDest()->getVisited()) {
                 GraphViewer::Node &node2 = gv.addNode(edge->getDest()->getId(),sf::Vector2f(edge->getDest()->getInfo().getLatitude(),
@@ -39,7 +39,7 @@ void graphViewerMaker(Graph<NodeInfo> graph) {
         }
     }
 
-    for (Node<NodeInfo>* node : graph.getNodeSet())
+    for (Node* node : graph.getNodeSet())
         node->setVisited(false);
 
     gv.createWindow();

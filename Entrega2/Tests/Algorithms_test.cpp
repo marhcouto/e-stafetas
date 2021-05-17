@@ -4,7 +4,7 @@
 
 #include <vector>
 #include "gtest/gtest.h"
-#include "../SaveFiles/FileHandling.h"
+#include "../FileHandling/FileHandling.h"
 
 template <class T>
 void checkSinglePath(std::vector<T> path, std::string expected) {
@@ -15,14 +15,14 @@ void checkSinglePath(std::vector<T> path, std::string expected) {
 }
 
 TEST(Algorithms_test, Tarjan_test) {
-    Graph<std::string> graph;
+    Graph graph;
 
-    graph.addNode("Baba", 1);
-    graph.addNode("Baba", 2);
-    graph.addNode("Baba", 3);
-    graph.addNode("Baba", 4);
-    graph.addNode("Baba", 5);
-    graph.addNode("Baba", 6);
+    graph.addNode(NodeInfo(1, 2), 1);
+    graph.addNode(NodeInfo(1, 2), 2);
+    graph.addNode(NodeInfo(1, 2), 3);
+    graph.addNode(NodeInfo(1, 2), 4);
+    graph.addNode(NodeInfo(1, 2), 5);
+    graph.addNode(NodeInfo(1, 2), 6);
 
     graph.addEdge(1, 2, 1);
     graph.addEdge(2, 3, 1);
@@ -48,10 +48,10 @@ TEST(Algorithms_test, Tarjan_test) {
 }
 
 TEST(Algorithms_test, FloydWarshall_test) {
-    Graph<std::string> myGraph;
+    Graph myGraph;
 
     for(int i = 1; i <= 7; i++)
-        myGraph.addNode("BEH", i);
+        myGraph.addNode(NodeInfo(1, 2), i);
 
     myGraph.addEdge(1, 2, 2);
     myGraph.addEdge(1, 4, 7);
@@ -76,10 +76,10 @@ TEST(Algorithms_test, FloydWarshall_test) {
 }
 
 TEST(Algorithms_test, MultiDijkstras_test) {
-    Graph<std::string> myGraph;
+    Graph myGraph;
 
     for(int i = 1; i <= 7; i++)
-        myGraph.addNode("BEH", i);
+        myGraph.addNode(NodeInfo(1, 2), i);
 
     myGraph.addEdge(1, 2, 2);
     myGraph.addEdge(1, 4, 7);
@@ -104,10 +104,10 @@ TEST(Algorithms_test, MultiDijkstras_test) {
 }
 
 TEST(Algorithms_test, Clustering_test) {
-    Graph<std::string> myGraph;
+    Graph myGraph;
 
     for(int i = 1; i <= 7; i++)
-        myGraph.addNode("BEH", i);
+        myGraph.addNode(NodeInfo(1, 2), i);
 
     myGraph.addEdge(1, 2, 2);
     myGraph.addEdge(1, 4, 7);
@@ -126,7 +126,7 @@ TEST(Algorithms_test, Clustering_test) {
     myGraph.assignIDM();
     myGraph.dijkstraMulti();
 
-    std::vector<Node<std::string>*> nodes;
+    std::vector<Node*> nodes;
 
     nodes.push_back(myGraph.findNode(1));
     nodes.push_back(myGraph.findNode(2));
@@ -136,7 +136,7 @@ TEST(Algorithms_test, Clustering_test) {
     nodes.push_back(myGraph.findNode(6));
     nodes.push_back(myGraph.findNode(7));
 
-    std::vector<std::vector<Node<std::string>*>> sets;
+    std::vector<std::vector<Node*>> sets;
     sets = myGraph.clustering(nodes, 3);
 
     ASSERT_EQ(sets.size(), 3);

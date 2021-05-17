@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include "SaveFiles/FileHandling.h"
+#include "FileHandling/FileHandling.h"
 #include "GVMaker.h"
 #include "E-Stafetas/Company.h"
 
@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     std::cout << "Nodes file:" << std::endl;
     std::cin >> nodesFile;*/
 
-    Graph<NodeInfo> graph;
+    Graph graph;
 
     try {
         FileReader::readFileToGraph(graph, "porto_full_edges.txt", "porto_full_nodes_xy.txt");

@@ -7,23 +7,23 @@
 
 #include <iostream>
 #include "../Algorithms/Graph.h"
-#include "../NodesInfo.h"
+#include "../Algorithms/NodesInfo.h"
 
 class Order {
     int orderId;
-    Node<NodeInfo>* pickUp;
-    Node<NodeInfo>* delivery;
+    Node* pickUp;
+    Node* delivery;
 public:
     int static currentId;
 
     Order() : Order(nullptr, nullptr) {};
-    Order(Node<NodeInfo>* n1, Node<NodeInfo>* n2);
+    Order(Node* n1, Node* n2);
 
     int getOrderId() const;
-    Node<NodeInfo> *getPickUp() const;
-    Node<NodeInfo> *getDelivery() const;
-    void setPickUp(Node<NodeInfo> *pickUp);
-    void setDelivery(Node<NodeInfo> *delivery);
+    Node* getPickUp() const;
+    Node* getDelivery() const;
+    void setPickUp(Node *pickUp);
+    void setDelivery(Node *delivery);
 
     friend std::ostream& operator<<(std::ostream& os, const Order& order);
 };

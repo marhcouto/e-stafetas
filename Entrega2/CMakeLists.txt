@@ -14,8 +14,8 @@ set(GRAPHVIEWERCPP_PATH lib/GraphViewerCpp)
 add_subdirectory(${GRAPHVIEWERCPP_PATH})
 include_directories(${GRAPHVIEWERCPP_PATH}/include)
 
-add_executable(Entrega2 main.cpp SaveFiles/FileHandling.cpp E-Stafetas/Vehicle.cpp E-Stafetas/Driver.cpp E-Stafetas/Order.cpp E-Stafetas/Client.cpp E-Stafetas/Company.cpp ) # Main
-add_executable(Tests tests.cpp Tests/Algorithms_test.cpp Tests/FileHandling_test.cpp Tests/Speed_test.cpp SaveFiles/FileHandling.cpp) # Tests
+add_executable(Entrega2 main.cpp FileHandling/FileHandling.cpp E-Stafetas/Vehicle.cpp E-Stafetas/Driver.cpp E-Stafetas/Order.cpp E-Stafetas/Client.cpp E-Stafetas/Company.cpp Algorithms/Graph.cpp) # Main
+add_executable(Tests tests.cpp Tests/Algorithms_test.cpp Tests/FileHandling_test.cpp Tests/Speed_test.cpp FileHandling/FileHandling.cpp Algorithms/Graph.cpp) # Tests
 
 target_link_libraries(Tests gtest_main gmock_main)
 target_link_libraries(Entrega2 graphviewer)
