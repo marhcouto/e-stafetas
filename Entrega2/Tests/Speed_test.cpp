@@ -4,7 +4,7 @@
 
 #include <chrono>
 #include "gtest/gtest.h"
-#include "../FileHandling.h"
+#include "../SaveFiles/FileHandling.h"
 
 TEST(Speed_test, Shortest_Path_test) {
     Graph<NodeInfo> graph1;
@@ -15,12 +15,6 @@ TEST(Speed_test, Shortest_Path_test) {
 
     graph1.assignIDM();
     graph2.assignIDM();
-
-    for (Node<NodeInfo>* n : graph1.getNodeSet()) {
-        for (Edge<NodeInfo>* e : n->getAdj()) {
-            EXPECT_EQ(e->getWeight(), 37);
-        }
-    }
 
     auto time1 = std::chrono::high_resolution_clock::now();
     graph1.dijkstraMulti();

@@ -3,3 +3,18 @@
 //
 
 #include "Client.h"
+
+int Client::currentId = 0;
+
+Client::Client(std::string name) : name(std::move(name)) {
+    id = Client::currentId;
+    Client::currentId++;
+}
+
+std::string Client::getName() const {
+    return name;
+}
+
+int Client::getId() const {
+    return id;
+}

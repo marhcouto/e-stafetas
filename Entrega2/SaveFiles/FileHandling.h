@@ -9,8 +9,8 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
-#include "Algorithms/Graph.h"
-#include "NodesInfo.h"
+#include "../Algorithms/Graph.h"
+#include "../NodesInfo.h"
 
 class UnexpectedEndOfFileException {
     const std::string message;
@@ -31,9 +31,11 @@ public:
     }
 };
 
+
 class FileReader {
 public:
     static void readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, std::string nodesFile);
+    static void readOrders(Graph<NodeInfo>& graph, std::string file);
 };
 
 

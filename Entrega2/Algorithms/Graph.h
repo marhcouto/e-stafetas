@@ -116,7 +116,7 @@ public:
     // Clustering
     std::vector<std::vector<Node<T>*>> clustering(std::vector<Node<T>*> nodes, int noSets); // TODO NOT TESTED
     double getSetDistances(std::vector<Node<T>*> v1, std::vector<Node<T>*> v2);
-    void mergeSets(std::vector<std::vector<Node<T>*>> clusters, int i, int j);
+    void mergeSets(std::vector<std::vector<Node<T>*>>& clusters, int i, int j);
 
     // Utils
     void printMatrixes();
@@ -471,11 +471,12 @@ std::vector<std::vector<Node<T>*>> Graph<T>::clustering(std::vector<Node<T>*> no
     }
     while (clusters.size() > noSets) {
         double bestDist = INF;
-        int i1, j1;
+        int i1 = 0, j1 = 0;
         for (unsigned int i = 0; i < clusters.size(); i++) {
-            for (unsigned int j = 0; j < clusters.size() && i != j; j++) {
+            for (unsigned int j = i + 1; j < clusters.size(); j++) {
                 double possibleDist = getSetDistances(clusters[i], clusters[j]);
-                if (bestDist > possibleDist) {
+                if (bestDist > possibleDist ||
+                (bestDist == possibleDist && clusters[i].size() + clusters[j].size() < clusters[i1].size() + clusters[j1].size())) {
                     bestDist = possibleDist;
                     i1 = i;
                     j1 = j;
@@ -501,7 +502,7 @@ double Graph<T>::getSetDistances(std::vector<Node<T>*> v1, std::vector<Node<T>*>
 }
 
 template <class T>
-void Graph<T>::mergeSets(std::vector<std::vector<Node<T>*>> clusters, int i, int j) {
+void Graph<T>::mergeSets(std::vector<std::vector<Node<T>*>>& clusters, int i, int j) {
     clusters[i].insert(clusters[i].end(), clusters[j].begin(), clusters[j].end());
     clusters.erase(clusters.begin() + j);
 }

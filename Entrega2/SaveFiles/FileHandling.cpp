@@ -46,5 +46,13 @@ void FileReader::readFileToGraph(Graph<NodeInfo>& graph, std::string edgesFile, 
                                                           node2->getInfo().getLatitude(), node2->getInfo().getLongitude()));
     }
     f.close();
+}
+
+void FileReader::readOrders(Graph<NodeInfo> &graph, std::string file) {
+    std::ifstream f;
+
+    f.open("../../GraphFiles/" + file, std::ifstream::in);
+    if (f.fail()) throw FailedToOpenFileException(std::string("Error in ") + std::string(__func__) + std::string(": unable to open orders file"));
+
 
 }

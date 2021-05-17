@@ -3,7 +3,7 @@
 //
 
 #include "gtest/gtest.h"
-#include "../FileHandling.h"
+#include "../SaveFiles/FileHandling.h"
 
 TEST(FileHandling_test, readingFromFile_test) {
     Graph<NodeInfo> graph;

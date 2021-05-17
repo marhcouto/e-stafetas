@@ -5,9 +5,22 @@
 #ifndef ENTREGA2_VEHICLE_H
 #define ENTREGA2_VEHICLE_H
 
+#include <string>
 
 class Vehicle {
+    std::string licensePlate;
+    double range; // Meters
+public:
+    static double maxRange;
+    Vehicle(const std::string &licensePlate);
 
+    std::string getLicensePlate() const;
+    double getRange() const;
+    double getMaxRange() const;
+    void setRange(double range);
+
+    friend std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle);
+    friend std::istream& operator>>(std::istream& is, Vehicle& vehicle);
 };
 
 

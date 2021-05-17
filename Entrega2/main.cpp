@@ -1,7 +1,9 @@
 #include <iostream>
 #include <iomanip>
-#include "FileHandling.h"
+#include "SaveFiles/FileHandling.h"
 #include "GVMaker.h"
+#include "E-Stafetas/Company.h"
+
 
 int main(int argc, char** argv) {
 
@@ -26,6 +28,7 @@ int main(int argc, char** argv) {
     }
 
     graphViewerMaker(graph);
+
 
     return 0;
 }
