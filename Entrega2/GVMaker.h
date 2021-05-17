@@ -15,7 +15,7 @@ void graphViewerMaker(Graph<NodeInfo> graph) {
     int counterID = 0;
     GraphViewer gv;
 
-    gv.setCenter(sf::Vector2f(533055, 4557664));
+    gv.setCenter(sf::Vector2f(1000, 1000));
 
     for (Node<NodeInfo>* node : graph.getNodeSet())
         node->setVisited(false);

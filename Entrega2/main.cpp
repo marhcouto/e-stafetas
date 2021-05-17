@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     Graph<NodeInfo> graph;
 
     try {
-        FileReader::readFileToGraph(graph, "edges_porto.txt", "nodes_x_y_porto.txt");
+        FileReader::readFileToGraph(graph, "porto_full_edges.txt", "porto_full_nodes_xy.txt");
     } catch (FailedToOpenFileException e) {
         std::cout << e.getMessage() << std::endl;
     } catch (UnexpectedEndOfFileException e) {

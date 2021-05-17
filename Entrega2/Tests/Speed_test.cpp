@@ -26,3 +26,14 @@ TEST(Speed_test, Shortest_Path_test) {
     std::cout << "FloydWarshall's:" << std::chrono::duration_cast<std::chrono::microseconds>(time3 - time2).count() << std::endl;
 
 }
+
+TEST(Speed_test, Connectivity_test) {
+    Graph<NodeInfo> graph1;
+
+    ASSERT_NO_THROW(FileReader::readFileToGraph(graph1, "porto_full_edges.txt", "porto_full_nodes_xy.txt"));
+
+    graph1.assignIDM();
+    graph1.tarjan();
+    graph1.eliminateInaccessible(1);
+    std::cout << graph1.getNodeSet().size() << std::endl;
+}
