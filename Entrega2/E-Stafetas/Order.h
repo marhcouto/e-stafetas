@@ -24,12 +24,14 @@ public:
     int static currentId;
 
     Order();
-    Order(Node* n1, Node* n2);
+    Order(Node* n1, Node* n2, Client* c, std::string date);
 
     int getOrderId() const;
     Node* getPickUp() const;
     Node* getDelivery() const;
     Client* getClient() const;
+    const string &getDate() const;
+    void setDate(const string &date);
     void setClient(Client *client);
     void setPickUp(Node *pickUp);
     void setDelivery(Node *delivery);

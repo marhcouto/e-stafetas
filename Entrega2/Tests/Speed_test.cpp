@@ -35,7 +35,7 @@ TEST(Speed_test, Connectivity_test) {
     graph1.assignIDM();
     auto time1 = std::chrono::high_resolution_clock::now();
     graph1.tarjan();
-    graph1.eliminateInaccessible(1);
+    ASSERT_NO_THROW(graph1.eliminateInaccessible(1));
     auto time2 = std::chrono::high_resolution_clock::now();
 
     std::cout << "Tarjan:" << std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count() << std::endl;

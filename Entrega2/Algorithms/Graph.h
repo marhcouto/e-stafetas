@@ -15,6 +15,7 @@
 #include <unordered_set>
 #include <stack>
 #include <iostream>
+#include <sstream>
 #include "MutablePriorityQueue.h"
 #include "NodesInfo.h"
 
@@ -26,10 +27,19 @@ class Node;
 #define INTINF std::numeric_limits<int>::max()
 
 class NodeDoesNotExistException {
-    const std::string message;
+    std::string message;
 public:
-    explicit NodeDoesNotExistException(std::string message) : message(std::move(message)) {}
-    std::string getMessage() const { return message; }
+    explicit NodeDoesNotExistException(int id, std::string funcName, bool matrix) {
+        std::stringstream ss;
+        if (!matrix)
+            ss << "Error in " << funcName << ": node " << id << " was not found";
+        else
+            ss << "Error in " << funcName << ": node with matrix id " << id << " was not found";
+        message = ss.str();
+    }
+    const std::string& getMessage() const {
+        return message;
+    }
 };
 
 
@@ -109,7 +119,7 @@ public:
     double bidirectionalDijkstra(int start, int finish);
     void floydWarshallShortestPath();
     void dijkstraMulti();
-    void updatePaths(int id);
+    void updatePaths(Node* origin);
 
     // Connectivity
     void tarjan();

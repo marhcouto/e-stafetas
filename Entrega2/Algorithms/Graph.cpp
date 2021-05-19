@@ -120,8 +120,9 @@ Edge* Graph::addEdge(Node* node1, Node* node2, double w) {
 Edge* Graph::addEdge(int id1, int id2, double w) {
     auto s = findNode(id1);
     auto d = findNode(id2);
-    if (s == nullptr || d == nullptr)
-        return nullptr;
+    if (d == nullptr) throw NodeDoesNotExistException(id2, __func__, false);
+    if (s == nullptr) throw NodeDoesNotExistException(id1, __func__, false);
+
     Edge *e = new Edge(s, d, w);
     s->addEdge(e);
     return e;
@@ -160,7 +161,8 @@ double Graph::bidirectionalDijkstra(int start, int finish) {
 
     Node* s = this->findNode(start);
     Node* p = this->findNode(finish);
-    if (s == nullptr || p == nullptr) 1;
+    if (p == nullptr) throw NodeDoesNotExistException(finish, __func__, false);
+    if (s == nullptr) throw NodeDoesNotExistException(start, __func__, false);
 
     for (Node *n : nodeSet) {
         n->visited = false;
@@ -288,28 +290,25 @@ void Graph::dijkstraMulti() {
                 }
             }
         }
-        updatePaths(node->getIDM());
+        updatePaths(node);
     }
 }
 
-void Graph::updatePaths(int idM) {
-    // Id of the origin node for the paths
-    Node* origin = findNodeMatrixId(idM);
-    if (origin == nullptr) return;
+void Graph::updatePaths(Node* origin) {
 
     for (Node* node : nodeSet) {
-        if (node->getIDM() == idM) {
-            pathsMatrix[idM][idM] = idM;
+        if (node->getIDM() == origin->getIDM()) {
+            pathsMatrix[origin->getIDM()][origin->getIDM()] = origin->getIDM();
             continue;
         }
         Node* node1 = node;
         std::stack<int> st;
-        while (node1->getIDM() != idM) {
+        while (node1->getIDM() != origin->getIDM()) {
             if (node1->path == NULL) break;
             st.push(node1->getIDM());
             node1 = node1->path;
         }
-        int id1 = idM;
+        int id1 = origin->getIDM();
         int id2 = node->getIDM();
         while (!st.empty()) {
             pathsMatrix[id1][node->getIDM()] = st.top();
@@ -445,8 +444,7 @@ void Graph::mergeSets(std::vector<std::vector<Node*>>& clusters, int i, int j) {
 
 void Graph::eliminateInaccessible(int id) {
     Node* node = findNode(id);
-    if (node == nullptr) throw NodeDoesNotExistException(std::string("Error in ") + std::string(__func__) +
-                                                         ": node selected does not belong to the graph");
+    if (node == nullptr) throw NodeDoesNotExistException(id, __func__, false);
 
     for (auto iterator = nodeSet.begin(); iterator != nodeSet.end();) {
         if ((*iterator)->low != node->low) {
@@ -480,14 +478,17 @@ std::vector<int> Graph::getShortestPath(int s, int d) const{ //Calculate the pat
     std::vector<int> res;
     Node* originV = this->findNode(s);
     Node* destV = this->findNode(d);
-    if (originV == nullptr || destV == nullptr) return res;
+    if (destV == nullptr) throw NodeDoesNotExistException(d, __func__, false);
+    if (originV == nullptr) throw NodeDoesNotExistException(s, __func__, false);
 
     res.push_back(originV->id);
     int nextI = originV->idM;
 
     while (destV->idM != nextI) {
         nextI = pathsMatrix[nextI][destV->idM];
-        res.push_back(findNodeMatrixId(nextI)->id);
+        Node* node = findNodeMatrixId(nextI);
+        if (node == nullptr) throw NodeDoesNotExistException(nextI, __func__, true);
+        res.push_back(node->id);
     }
 
     return res;

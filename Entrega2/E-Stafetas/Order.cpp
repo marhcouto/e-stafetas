@@ -6,9 +6,9 @@
 
 int Order::currentId = 1;
 
-Order::Order() : Order(nullptr, nullptr) {};
+Order::Order() : Order(nullptr, nullptr, nullptr, "") {};
 
-Order::Order(Node* n1, Node* n2) : pickUp(n1), delivery(n2), orderId(Order::currentId), client(nullptr) {
+Order::Order(Node* n1, Node* n2, Client* c, std::string date) : pickUp(n1), delivery(n2), orderId(Order::currentId), client(c), date(date) {
     Order::currentId++;
 }
 
@@ -32,6 +32,15 @@ void Order::setDelivery(Node* delivery) {
     this->delivery = delivery;
 }
 
+const string &Order::getDate() const {
+    return date;
+}
+
+void Order::setDate(const string &date) {
+    Order::date = date;
+}
+
+
 Client *Order::getClient() const {
     return client;
 }
@@ -41,12 +50,12 @@ void Order::setClient(Client *client) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Order& order) {
-    os << order.pickUp->getId() << " " << order.delivery->getId() << " " << order.client->getId();
+    os << order.pickUp->getId() << " " << order.delivery->getId() << " " << order.client->getId() << " " << order.getDate();
     return os;
 }
 
 std::istream& operator>>(std::istream& is, Order& order) {
     int i1, i2, i3;
-    is >> order.tempPickUpId >> order.tempDeliveryId >> order.tempClientId;
+    is >> order.tempPickUpId >> order.tempDeliveryId >> order.tempClientId >> order.date;
     return is;
 }
