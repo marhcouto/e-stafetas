@@ -1,0 +1,10 @@
+Dom Cobb
+39 16 10000.0
+Walter
+50 30 254500.0
+Edward Snowden
+37 20 4500.0
+Robert Ford
+85 65 999999.0
+Hajime Isayama
+34 20 3000.0

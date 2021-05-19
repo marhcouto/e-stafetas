@@ -70,7 +70,7 @@ int Node::getLow() const {
     return low;
 }
 
-const int Node::getId() const {
+int Node::getId() const {
     return id;
 }
 
@@ -153,6 +153,90 @@ Graph::~Graph() {
 // A L G O R I T H M S
 
 // Shortest Path
+
+double Graph::bidirectionalDijkstra(int start, int finish) {
+
+    double bestDist = INF;
+
+    Node* s = this->findNode(start);
+    Node* p = this->findNode(finish);
+    if (s == nullptr || p == nullptr) 1;
+
+    for (Node *n : nodeSet) {
+        n->visited = false;
+        n->queueIndex = 0;
+        n->dist = INF;
+        n->distR = INF;
+        n->way = 0;
+        n->path = NULL;
+    }
+
+    s->way = 1;
+    p->way = 2;
+
+    MutablePriorityQueue<Node> nodeF;
+    MutablePriorityQueue<Node> nodeB;
+
+    s->dist = 0;
+    p->distR = 0;
+    nodeF.insert(s);
+    nodeB.insert(p);
+
+    while(!nodeF.empty() && !nodeB.empty()) {
+        Node* node1 = nodeF.extractMin();
+        Node* node2 = nodeB.extractMin();
+        node1->visited = true;
+        node2->visited = true;
+
+        if(node1->dist + node2->dist >= bestDist)
+            return bestDist;
+
+        //FRONT
+        for (Edge* edge : node1->adj) {
+            double oldDist = edge->dest->dist;
+            if (bestDist > edge->dest->distR + edge->weight + node1->dist && !edge->dest->visited && edge->dest->way == 2) {
+                bestDist = edge->dest->distR + edge->weight + node1->dist;
+            }
+            else {
+                edge->dest->way = 1;
+                //MiniDijkstraStep
+                if (edge->dest->dist > node1->dist + edge->weight) {
+                    edge->dest->dist = node1->dist + edge->weight;
+                    edge->dest->path = node1;
+
+                    if(oldDist == INF)
+                        nodeF.insert(edge->dest);
+                    else
+                        nodeF.decreaseKey(edge->dest);
+                }
+            }
+        }
+
+        //BACK
+        for (Edge* edge : node2->adj) {
+            double oldDist = edge->dest->dist;
+            if (bestDist > node2->distR + edge->weight + edge->dest->dist && !edge->dest->visited && edge->dest->way == 1) {
+
+                bestDist = node2->distR + edge->weight + edge->dest->dist;
+            }
+            else {
+                edge->dest->way = 2;
+
+                //MiniDijkstraStep
+                if (edge->dest->dist > node2->dist + edge->weight) {
+                    edge->dest->dist = node2->dist + edge->weight;
+                    edge->dest->path = node2;
+
+                    if(oldDist == INF)
+                        nodeB.insert(edge->dest);
+                    else
+                        nodeB.decreaseKey(edge->dest);
+                }
+            }
+        }
+    }
+    return INF;
+}
 
 void Graph::dijkstraMulti() {
 

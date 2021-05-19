@@ -8,24 +8,34 @@
 #include <iostream>
 #include "../Algorithms/Graph.h"
 #include "../Algorithms/NodesInfo.h"
+#include "Client.h"
 
 class Order {
     int orderId;
+    std::string date;
     Node* pickUp;
     Node* delivery;
+    Client* client;
 public:
+    int tempClientId;
+    int tempPickUpId;
+    int tempDeliveryId;
+
     int static currentId;
 
-    Order() : Order(nullptr, nullptr) {};
+    Order();
     Order(Node* n1, Node* n2);
 
     int getOrderId() const;
     Node* getPickUp() const;
     Node* getDelivery() const;
+    Client* getClient() const;
+    void setClient(Client *client);
     void setPickUp(Node *pickUp);
     void setDelivery(Node *delivery);
 
     friend std::ostream& operator<<(std::ostream& os, const Order& order);
+    friend std::istream& operator>>(std::istream& is, Order& order);
 };
 
 

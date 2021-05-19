@@ -7,26 +7,34 @@
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <iomanip>
 #include "../Algorithms/Graph.h"
 #include "../Algorithms/NodesInfo.h"
 
 class UnexpectedEndOfFileException {
-    const std::string message;
+    std::string message;
 public:
-    explicit UnexpectedEndOfFileException(std::string message) : message(std::move(message)) {};
-
-    std::string getMessage() const {
+    explicit UnexpectedEndOfFileException(std::string fileName, std::string funcName) {
+        std::stringstream ss;
+        ss << "Error in " << funcName << ": file " << fileName << " ended unexpectedly";
+        message = ss.str();
+    }
+    const std::string& getMessage() const {
         return message;
     }
 };
 
 class FailedToOpenFileException {
-    const std::string message;
+    std::string message;
 public:
-    explicit FailedToOpenFileException(std::string message) : message(std::move(message)) {};
-    string getMessage() const {
+    explicit FailedToOpenFileException(std::string fileName, std::string funcName) {
+        std::stringstream ss;
+        ss << "Error in " << funcName << ": unable to open file " << fileName;
+        message = ss.str();
+    }
+    const std::string& getMessage() const {
         return message;
     }
 };
@@ -35,9 +43,38 @@ public:
 class FileReader {
 public:
     static void readFileToGraph(Graph& graph, std::string edgesFile, std::string nodesFile);
-    static void readOrders(Graph& graph, std::string file);
+
+    template <class T>
+    static void readFile(std::vector<T*>& v, std::string file);
+
+    template <class T>
+    static void writeFile(const std::vector<T>& v, std::string file);
 };
 
+template <class T>
+void FileReader::readFile(std::vector<T*>& v,std::string file) {
+    ifstream f;
+    f.open("../../DatabaseFiles/" + file, std::ifstream::in);
+    if (f.fail()) throw FailedToOpenFileException(file, __func__);
+
+    while(!f.eof()) {
+        T* t = new T();
+        f >> *t;
+        v.push_back(t);
+    }
+    f.close();
+}
+
+template <class T>
+void FileReader::writeFile(const std::vector<T> &v, std::string file) {
+    ofstream f;
+    f.open("../../DatabaseFiles/" + file, std::ofstream::in | std::ofstream::trunc);
+    if (f.fail()) throw FailedToOpenFileException(file, __func__);
+
+    for (T t : v)
+        f << *t;
+    f.close();
+}
 
 
 #endif //ENTREGA2_FILEHANDLING_H

@@ -4,8 +4,15 @@
 
 #include "Driver.h"
 
+int Driver::currentId = 1;
 
-Driver::Driver(std::string name, int age, int exp, float salary) : name(std::move(name)), age(age), yearsExperience(exp), salary(salary) {}
+Driver::Driver() : id(currentId) {
+    Driver::currentId++;
+}
+
+Driver::Driver(std::string name, int age, int exp, float salary) : name(std::move(name)), id(Driver::currentId), age(age), yearsExperience(exp), salary(salary) {
+    Driver::currentId++;
+}
 
 std::string Driver::getName() const {
     return name;
@@ -17,6 +24,10 @@ int Driver::getAge() const {
 
 int Driver::getYearsExperience() const {
     return yearsExperience;
+}
+
+int Driver::getId() const {
+    return id;
 }
 
 float Driver::getSalary() const {
@@ -36,11 +47,13 @@ void Driver::setSalary(float salary) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Driver& driver) {
-    os << driver.name << driver.age << driver.yearsExperience << driver.salary;
+    os << driver.name << "\n" << driver.age << " " << driver.yearsExperience << " " << driver.salary;
     return os;
 }
 
 std::istream& operator>>(std::istream& is, Driver& driver) {
-    is >> driver.name >> driver.age >> driver.yearsExperience >> driver.salary;
+    std::getline(is, driver.name);
+    is >> driver.age >> driver.yearsExperience >> driver.salary;
+    is.ignore(20, '\n');
     return is;
 }

@@ -45,6 +45,8 @@ class Node {
     Node* path = nullptr;
     int queueIndex = 0; // required by MutablePriorityQueue
     double dist = 0; // For dijkstra's
+    double distR = 0; // for bi directional
+    int way = 0; // ????????' For bidirectional dijkstra's
 
     Edge* addEdge(Node* dest, double w);
     void addEdge(Edge* edge);
@@ -58,7 +60,7 @@ public:
     const Node *getPath() const;
     int getNum() const;
     int getLow() const;
-    const int getId() const;
+    int getId() const;
     int getIDM() const;
     bool getVisited() const;
     void setPath(Node* path);
@@ -104,6 +106,7 @@ public:
     // Algorithms
 
     // Shortest Path
+    double bidirectionalDijkstra(int start, int finish);
     void floydWarshallShortestPath();
     void dijkstraMulti();
     void updatePaths(int id);

@@ -14,7 +14,7 @@ void checkSinglePath(std::vector<T> path, std::string expected) {
     EXPECT_EQ(expected, ss.str());
 }
 
-TEST(Algorithms_test, Tarjan_test) {
+TEST(Algorithms, Tarjan) {
     Graph graph;
 
     graph.addNode(NodeInfo(1, 2), 1);
@@ -47,7 +47,7 @@ TEST(Algorithms_test, Tarjan_test) {
     EXPECT_EQ(graph.getNodeSet().size(), 4);
 }
 
-TEST(Algorithms_test, FloydWarshall_test) {
+TEST(Algorithms, FloydWarshall) {
     Graph myGraph;
 
     for(int i = 1; i <= 7; i++)
@@ -75,7 +75,7 @@ TEST(Algorithms_test, FloydWarshall_test) {
     checkSinglePath(myGraph.getShortestPath(7, 1), "7 6 4 3 1 ");
 }
 
-TEST(Algorithms_test, MultiDijkstras_test) {
+TEST(Algorithms, MultiDijkstras) {
     Graph myGraph;
 
     for(int i = 1; i <= 7; i++)
@@ -103,7 +103,7 @@ TEST(Algorithms_test, MultiDijkstras_test) {
     checkSinglePath(myGraph.getShortestPath(7, 1), "7 6 4 3 1 ");
 }
 
-TEST(Algorithms_test, Clustering_test) {
+TEST(Algorithms, Clustering) {
     Graph myGraph;
 
     for(int i = 1; i <= 7; i++)
@@ -150,7 +150,34 @@ TEST(Algorithms_test, Clustering_test) {
     ASSERT_EQ(sets[0][4]->getId(), 6);
     ASSERT_EQ(sets[1][0]->getId(), 5);
     ASSERT_EQ(sets[2][0]->getId(), 7);
+}
 
+TEST(Algorithms, Bidirectional) {
+    Graph myGraph;
+
+    for(int i = 1; i <= 7; i++)
+        myGraph.addNode(NodeInfo(1, 2), i);
+
+    myGraph.addEdge(1, 2, 2);
+    myGraph.addEdge(1, 4, 7);
+    myGraph.addEdge(2, 4, 3);
+    myGraph.addEdge(2, 5, 5);
+    myGraph.addEdge(3, 1, 2);
+    myGraph.addEdge(3, 6, 5);
+    myGraph.addEdge(4, 3, 1);
+    myGraph.addEdge(4, 5, 1);
+    myGraph.addEdge(4, 6, 6);
+    myGraph.addEdge(4, 7, 4);
+    myGraph.addEdge(5, 7, 2);
+    myGraph.addEdge(6, 4, 3);
+    myGraph.addEdge(7, 6, 4);
+
+    myGraph.assignIDM();
+    myGraph.dijkstraMulti();
+
+    myGraph.printMatrixes();
+
+    EXPECT_EQ(myGraph.bidirectionalDijkstra(5, 2), 14);
 }
 
 

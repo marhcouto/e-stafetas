@@ -4,10 +4,13 @@
 
 #include "Client.h"
 
-int Client::currentId = 0;
+int Client::currentId = 1;
 
-Client::Client(std::string name) : name(std::move(name)) {
-    id = Client::currentId;
+Client::Client() : id(Client::currentId), noOrders(0) {
+    Client::currentId++;
+}
+
+Client::Client(std::string name) : id(Client::currentId), name(std::move(name)), noOrders(0) {
     Client::currentId++;
 }
 
@@ -17,4 +20,22 @@ std::string Client::getName() const {
 
 int Client::getId() const {
     return id;
+}
+
+int Client::getNoOrders() const {
+    return noOrders;
+}
+
+void Client::incrementOrders() {
+    this->noOrders++;
+}
+
+std::ostream& operator<<(std::ostream& os, const Client& client) {
+    os << client.name;
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, Client& client) {
+    std::getline(is, client.name);
+    return is;
 }

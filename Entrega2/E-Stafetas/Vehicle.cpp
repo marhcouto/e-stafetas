@@ -4,11 +4,13 @@
 
 #include "Vehicle.h"
 
-double Vehicle::maxRange = 1000000;
+#include <utility>
 
-Vehicle::Vehicle(const std::string &licensePlate) : licensePlate(licensePlate) {
-    this->range = Vehicle::maxRange;
-};
+double Vehicle::maxRange = 30000;
+
+Vehicle::Vehicle() : range(Vehicle::maxRange) {};
+
+Vehicle::Vehicle(std::string licensePlate) : licensePlate(std::move(licensePlate)), range(Vehicle::maxRange) {};
 
 std::string Vehicle::getLicensePlate() const {
     return licensePlate;

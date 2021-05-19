@@ -12,7 +12,8 @@ class Vehicle {
     double range; // Meters
 public:
     static double maxRange;
-    Vehicle(const std::string &licensePlate);
+    Vehicle();
+    explicit Vehicle(std::string licensePlate);
 
     std::string getLicensePlate() const;
     double getRange() const;

@@ -6,19 +6,28 @@
 #define ENTREGA2_CLIENT_H
 
 #include <string>
+#include <iostream>
 #include <utility>
 
 
 class Client {
     std::string name;
     int id;
+    int noOrders;
 public:
     int static currentId;
 
+    Client();
     explicit Client(std::string name);
 
     std::string getName() const;
     int getId() const;
+    int getNoOrders() const;
+
+    void incrementOrders();
+
+    friend std::ostream& operator<<(std::ostream& os, const Client& client);
+    friend std::istream& operator>>(std::istream& is, Client& client);
 };
 
 
