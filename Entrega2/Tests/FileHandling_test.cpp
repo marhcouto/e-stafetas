@@ -76,7 +76,7 @@ TEST(FileHandling, readingOrders) {
         EXPECT_EQ(id, order->getOrderId());
         EXPECT_TRUE(order->getDate().size() > 0);
         id++;
-        // std::cout << "Order:" << order->getOrderId() << " Date:" << order->getDate() << " PickUp:" << order->tempPickUpId << " Delivery:" <<
-        // order->tempDeliveryId << " Client:" << order->tempClientId << std::endl;
+        std::cout << "Order:" << order->getOrderId() << " Date:" << order->getDate() << " PickUp:" << order->tempPickUpId << " Delivery:" <<
+        order->tempDeliveryId << " Client:" << order->tempClientId << std::endl;
     }
 }

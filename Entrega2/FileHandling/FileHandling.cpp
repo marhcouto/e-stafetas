@@ -14,7 +14,6 @@ void FileReader::readFileToGraph(Graph& graph, std::string edgesFile, std::strin
     f.open("../../GraphFiles/" + nodesFile, std::ifstream::in);
     if (f.fail()) throw FailedToOpenFileException(edgesFile, __func__);
 
-    int i = 0;
     while (!f.eof()) {
         double latitude, longitude;
         int nodeID;
@@ -22,7 +21,6 @@ void FileReader::readFileToGraph(Graph& graph, std::string edgesFile, std::strin
         char uselessChar1, uselessChar2, uselessChar3, uselessChar4;
         f >> uselessChar1 >> nodeID  >> uselessChar2 >> latitude >> uselessChar3 >> longitude >> uselessChar4;
         graph.addNode(NodeInfo(latitude, longitude), nodeID);
-        std::cout << ++i << std::endl;
     }
     f.close();
 
@@ -30,7 +28,6 @@ void FileReader::readFileToGraph(Graph& graph, std::string edgesFile, std::strin
     f.open("../../GraphFiles/" + edgesFile, std::ifstream::in);
     if (f.fail()) throw FailedToOpenFileException(edgesFile, __func__);
 
-    i = 0;
     while (!f.eof()) {
         int nodeID1, nodeID2;
         char uselessChar;
@@ -41,7 +38,6 @@ void FileReader::readFileToGraph(Graph& graph, std::string edgesFile, std::strin
         if (node2 == nullptr) throw NodeDoesNotExistException(nodeID2, __func__, false);
         graph.addEdge(node1, node2, NodeInfo::getDistance(node1->getInfo().getLatitude(), node1->getInfo().getLongitude(),
                                                           node2->getInfo().getLatitude(), node2->getInfo().getLongitude()));
-        std::cout << ++i << std::endl;
     }
     f.close();
 
@@ -51,6 +47,8 @@ void FileReader::readFileToGraph(Graph& graph, std::string edgesFile, std::strin
 void FileReader::readTagsFile(Graph &graph, std::string tagsFile) {
     fstream f;
 
+    std::cout << "Started reading tags\n";
+
     f.open("../../GraphFiles/" + tagsFile, std::istream::in);
     if (f.fail()) throw FailedToOpenFileException(tagsFile, __func__);
 
@@ -58,12 +56,13 @@ void FileReader::readTagsFile(Graph &graph, std::string tagsFile) {
     while (!f.eof()) {
         int id;
         f >> id;
-        std::cout << ++i << " - " << id << std::endl;
         Node* n = graph.findNode(id);
         if (n == nullptr) throw NodeDoesNotExistException(id, __func__, false);
         n->getInfo().setType(RECHARGE);
     }
     f.close();
+
+    std::cout << "Finished reading tags\n";
 }
 
 void FileReader::writeGraphToFile(const Graph &graph, std::string edgesFile, std::string nodesFile) {

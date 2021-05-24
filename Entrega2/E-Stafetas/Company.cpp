@@ -131,11 +131,14 @@ void Company::listCurrentOrders() {
 }
 
 void Company::listOrdersClients(int id) {
+    for (const auto& order : orders) {
+        if (order->getClient()->getId() == id)
+            order->print();
+    }
     for (const auto& order : currentOrders) {
         if (order->getClient()->getId() == id)
             order->print();
     }
-
 }
 
 bool Company::removeClient(int id) {
@@ -206,6 +209,7 @@ void Company::addDriver(Driver *driver) {
 
 void Company::addOrder(Order *order) {
     currentOrders.push_back(order);
+    orders.push_back(order);
 }
 
 void Company::addClient(Client *client) {
@@ -222,21 +226,44 @@ void Company::assignOrdersParameters(Graph& graph) {
         order->setDelivery(n2);
         Client* c = this->findClient(order->tempClientId);
         if (c == nullptr) throw ItemNotFoundException<int>("client", order->tempClientId, __func__);
-        order->setClient(this->findClient(order->tempClientId));
+        order->setClient(c);
+        c->incrementOrders();
     }
 }
 
-void Company::makeRoutes(Graph &graph, std::vector<Order> orders) {
+// Not needed
+/*void Company::assignCurrentOrders(Graph& graph) {
+    for (Order* order : currentOrders) {
+        Node* n1 = graph.findNode(order->tempPickUpId);
+        Node* n2 = graph.findNode(order->tempDeliveryId);
+        if (n1 == nullptr) throw NodeDoesNotExistException(order->tempPickUpId, __func__, false);
+        if (n2 == nullptr) throw NodeDoesNotExistException(order->tempDeliveryId, __func__, false);
+        if (n1->getInfo().getType() != NONE) throw InvalidNodeException(n1->getId());
+        if (n2->getInfo().getType() != NONE) throw InvalidNodeException(n2->getId());
+        n1->getInfo().setType(PICKUP);
+        n2->getInfo().setType(DELIVERY);
+        order->setPickUp(n1);
+        order->setDelivery(n2);
+        Client* c = this->findClient(order->tempClientId);
+        if (c == nullptr) throw ItemNotFoundException<int>("client", order->tempClientId, __func__);
+        order->setClient(c);
+        c->incrementOrders();
+    }
+}*/
+
+void Company::makeRoutes(Graph &graph) {
     std::vector<Node*> pickUps;
-    for (Order order : orders) {
-        order.getPickUp()->setPair(order.getDelivery());
-        order.getDelivery()->setPair(order.getPickUp());
-        pickUps.push_back(order.getPickUp());
+    for (Order* order : currentOrders) {
+        order->getPickUp()->setPair(order->getDelivery());
+        order->getDelivery()->setPair(order->getPickUp());
+        pickUps.push_back(order->getPickUp());
     }
     std::vector<std::vector<Node*>> clusters;
-    clusters = graph.clustering(pickUps, fleet.size());
-    for (unsigned int i = 0; i < fleet.size(); i++) {
+    int noCluster = std::min(crew.size(), std::min(currentOrders.size(), fleet.size()));
+    clusters = graph.clustering(pickUps, noCluster);
+    for (unsigned int i = 0; i < noCluster; i++) {
         std::vector<Node*> nodesOrdered = graph.getRoute(fleet.at(i)->getRange(), clusters.at(i), garage);
         std::vector<int> path = graph.multiGetPath(nodesOrdered);
+        crew.at(i)->setRoute(path);
     }
 }

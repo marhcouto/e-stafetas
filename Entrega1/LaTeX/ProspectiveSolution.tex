@@ -42,17 +42,17 @@ To tackle this problem, we use the following strategy:
 Tarjan's algorithm was our choice to solve the connectivity problem. By checking the connectivity of the graph, we can check for any nodes that are not accessible, supposedly due to road work, accidents or other unexpected events. We chose Tarjan's because it presents itself as the fastest option from the ones we analysed.
 
 \subsection{Problem IV - Orders Distribution}
-The distribution of orders by the vehicles is by far the most challenging subproblem. This is a Rout Optimization problem. Our solution for it was not optimal, yet we made an effort to make the result the best possible. We solved this problem by dividing the pick up points (representing each a different order) into $|V|$ different groups, where $|V|$ is the number of vehicles available. We do this using the Agglomerative Hierarchical Clustering described in the previous section.
+The distribution of orders by the vehicles is by far the most challenging subproblem. This is a Route Optimization problem. Our solution for it was not optimal, yet we made an effort to make the result the best possible. We solved this problem by dividing the pick up points (representing each a different order) into $|V|$ different groups, where $|V|$ is the number of vehicles available. We do this using the Agglomerative Hierarchical Clustering described in the previous section.
 
 \subsection{General}
 In sum, our solution:
 \begin{enumerate}
     \item Pre-Processing of the graph in terms of shortest paths and connectivity
     \item Ditribution of Orders into groups
-    \item Calculation of the best rout for each group (which represents a vehicle's orders)
+    \item Calculation of the best route for each group (which represents a vehicle's orders)
     \begin{itemize}
         \item Use of the shortest paths pre-calculated or calculate new ones if necessary
-        \item Try the best rout; if autonomy deems into impossible at any point, rewind until you can change a decision (backtracking)
+        \item Try the best route; if autonomy deems into impossible at any point, rewind until you can change a decision (backtracking)
     \end{itemize}
 \end{enumerate}
 \uline{Note:} The algorithms and solutions presented may not be the exact same to be used, they only represent an estimation. In the second part of this work, the algorithms will be tested and some changes may be necessary.

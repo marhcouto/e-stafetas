@@ -28,6 +28,14 @@ GVMaker::GVMaker(Graph graph) {
                 node1.setColor(GraphViewer::GREEN);
                 node1.setLabel("R");
                 node1.setSize(30.0);
+            } else if (node->getInfo().getType() == PICKUP) {
+                node1.setColor(GraphViewer::YELLOW);
+                node1.setLabel("PUP");
+                node1.setSize(30.0);
+            } else if (node->getInfo().getType() == DELIVERY) {
+                node1.setColor(GraphViewer::ORANGE);
+                node1.setLabel("D");
+                node1.setSize(30.0);
             }
             node->setVisited(true);
         }

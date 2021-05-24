@@ -22,7 +22,7 @@ void Menu::loadingMenu() {
     while(true) {
         std::cout << "Option:\n";
         std::cin >> option;
-        if (!std::cin.fail() && option <= 5 && option >= 0) break;
+        if (!std::cin.fail() && option <= 2 && option >= 0) break;
         std::cout << "Invalid answer\n";
     }
     switch (option) {
@@ -36,6 +36,7 @@ void Menu::loadingMenu() {
                 std::cout << e.getMessage() << std::endl;
             }
             garage = graph.findNode(3);
+            garage->getInfo().setType(GARAGE);
             break;
         }
         case 2: {
@@ -83,6 +84,7 @@ void Menu::loadingMenu() {
         FileReader::readFile<Order>(orders, "Orders.txt");
     } catch(FailedToOpenFileException e) {
         std::cout << e.getMessage() << std::endl;
+        exit(1);
     }
     this->company = Company(crew, clients, orders, fleet, garage);
 
@@ -93,26 +95,53 @@ void Menu::loadingMenu() {
     } catch (NodeDoesNotExistException& e) {
         std::cout << e.getMessage() << std::endl;
     }
+
+    std::cout << "To choose a option, type the number to which it is assigned\n";
+    std::cout << "1- Pre-process short-paths (slower)\n";
+    std::cout << "2- Leave it to the moment\n";
+    std::cout << "0- Quit\n";
+
+    while(true) {
+        std::cout << "Option:\n";
+        std::cin >> option;
+        if (!std::cin.fail() && option <= 2 && option >= 0) break;
+        std::cout << "Invalid answer\n";
+    }
+    switch(option) {
+        case 1:{
+            graph.assignIDM();
+            graph.dijkstraMulti();
+            break;
+        }
+        case 2:{
+            break;
+        }
+        case 0:{
+            return;
+        }
+    }
 }
 
 void Menu::startingMenu() {
 
     std::cout << "WELCOME TO E-STAFETAS\n\n";
 
-    std::cout << "To choose a option, type the number to which it is assigned\n";
-    std::cout << "1- E-STAFETAS info: clients, orders, drivers, etc.\n";
-    std::cout << "2- Graph: add and remove nodes\n";
-    std::cout << "3- Run route calculation\n";
-    std::cout << "4- Edit current orders\n";
-    std::cout << "5- View graph\n";
-    std::cout << "0- Exit\n";
-
-    while(true) {
+    bool stop = false;
+    while(!stop) {
+        std::cout << "\nTo choose a option, type the number to which it is assigned\n";
+        std::cout << "1- E-STAFETAS info: clients, orders, drivers, etc.\n";
+        std::cout << "2- Graph: add and remove nodes\n";
+        std::cout << "3- Run route calculation\n";
+        std::cout << "4- Edit current orders\n";
+        std::cout << "5- View graph\n";
+        std::cout << "6- Print Routes (only relevant after calculations are made)\n";
+        std::cout << "7- Save database files\n";
+        std::cout << "0- Exit\n";
         int option;
         while(true) {
             std::cout << "Option:\n";
             std::cin >> option;
-            if (!std::cin.fail() && option <= 5 && option >= 0) break;
+            if (!std::cin.fail() && option <= 7 && option >= 0) break;
             std::cout << "Invalid answer\n";
         }
         switch (option) {
@@ -125,7 +154,11 @@ void Menu::startingMenu() {
                 break;
             }
             case 3: {
-                //Run_ROute
+                if (company.getCurrentOrders().empty()) {
+                    std::cout << "No current orders yet, add some in menu 4 (Edit current orders)\n";
+                    break;
+                }
+                company.makeRoutes(graph);
                 break;
             }
             case 4: {
@@ -137,8 +170,25 @@ void Menu::startingMenu() {
                 gv.display();
                 break;
             }
+            case 6: {
+                for (Driver* d : company.getCrew())
+                    d->printRoute();
+                break;
+            }
+            case 7: {
+                try {
+                    FileReader::writeFile<Driver>(company.getCrew(), "Drivers.txt");
+                    FileReader::writeFile<Client>(company.getClients(), "Clients.txt");
+                    FileReader::writeFile<Order>(company.getOrders(), "Orders.txt");
+                    FileReader::writeFile<Vehicle>(company.getFleet(), "Vehicles.txt");
+                } catch (FailedToOpenFileException& e) {
+                    std::cout << e.getMessage() << std::endl;
+                }
+                break;
+            }
             case 0: {
-                return;
+                stop = true;
+                break;
             }
         }
     }
@@ -147,28 +197,28 @@ void Menu::startingMenu() {
 
 void Menu::companyMenu() {
     std::cout << "E-STAFETAS Menu\n\n";
-    std::cout << "To choose a option, type the number to which it is assigned\n";
-    std::cout << "1- List all clients\n";
-    std::cout << "2- List all past orders\n";
-    std::cout << "3- List all drivers\n";
-    std::cout << "4- List all vehicles\n";
-    std::cout << "5- Find vehicle\n";
-    std::cout << "6- Find client\n";
-    std::cout << "7- Find order\n";
-    std::cout << "8- Find driver\n";
-    std::cout << "9- Add vehicle\n";
-    std::cout << "10- Remove vehicle\n";
-    std::cout << "11- Add client\n";
-    std::cout << "12- Remove client\n";
-    std::cout << "13- Add driver\n";
-    std::cout << "14- Remove driver\n";
-    std::cout << "15- List drivers by name\n";
-    std::cout << "16- List clients by name\n";
-    std::cout << "17- List past orders by client's name\n";
-    std::cout << "0- Go back\n";
 
     bool stop = false;
     while(!stop) {
+        std::cout << "\nTo choose a option, type the number to which it is assigned\n";
+        std::cout << "1- List all clients\n";
+        std::cout << "2- List all orders\n";
+        std::cout << "3- List all drivers\n";
+        std::cout << "4- List all vehicles\n";
+        std::cout << "5- Find vehicle\n";
+        std::cout << "6- Find client\n";
+        std::cout << "7- Find order\n";
+        std::cout << "8- Find driver\n";
+        std::cout << "9- Add vehicle\n";
+        std::cout << "10- Remove vehicle\n";
+        std::cout << "11- Add client\n";
+        std::cout << "12- Remove client\n";
+        std::cout << "13- Add driver\n";
+        std::cout << "14- Remove driver\n";
+        std::cout << "15- List drivers by name\n";
+        std::cout << "16- List clients by name\n";
+        std::cout << "17- List past orders by client's name\n";
+        std::cout << "0- Go back\n";
         int option;
         while(true) {
             std::cout << "Option:\n";
@@ -201,14 +251,13 @@ void Menu::companyMenu() {
             case 5: {
                 //Find vehicle
                 std::string licensePlate;
-                std::cout << "What's the vehicle License Plate? \n";
+                std::cout << "License Plate:\n";
                 std::cin >> licensePlate;
                 Vehicle* v = company.findVehicle(licensePlate);
                 if( v == nullptr)
-                    std::cout << "vehicle does not exist\n";
+                    std::cout << "Vehicle does not exist\n";
                 else
-                        v->print();
-
+                    v->print();
                 break;
             }
             case 6: {
@@ -222,7 +271,7 @@ void Menu::companyMenu() {
                     std::cout << "Invalid answer\n";
                 }
                 Client* c = company.findClient(id);
-                if( c == nullptr)
+                if(c == nullptr)
                     std::cout << "Client does not exist\n";
                 else
                     c->print();
@@ -242,9 +291,7 @@ void Menu::companyMenu() {
                     std::cout << "Order does not exist\n";
                 else
                     o->print();
-
                 break;
-
             }
             case 8: {
                 //Find driver
@@ -260,7 +307,6 @@ void Menu::companyMenu() {
                     std::cout << "Driver does not exist\n";
                 else
                     d->print();
-
                 break;
             }
             case 9: {
@@ -288,7 +334,8 @@ void Menu::companyMenu() {
                 std::string name;
 
                 std::cout << "Name:\n";
-                std::cin >> name;
+                std::cin.ignore(20, '\n');
+                std::getline(std::cin, name);
 
                 company.addClient(new Client(name));
                 break;
@@ -315,7 +362,8 @@ void Menu::companyMenu() {
                 float salary;
 
                 std::cout << "Name:\n";
-                std::cin >> name;
+                std::cin.ignore(20, '\n');
+                std::getline(std::cin, name);
 
                 while(true) {
                     std::cout << "Salary:\n";
@@ -342,18 +390,19 @@ void Menu::companyMenu() {
             }
             case 15: {
                 //List drivers by name
-                    std::string name;
-                    std::cout << "What's the driver's name?\n";
-                    std::cin >> name;
-                    company.listDriversName(name);
-
-                    break;
+                std::string name;
+                std::cin.ignore(20, '\n');
+                std::cout << "What's the driver's name?\n";
+                std::getline(std::cin, name);
+                company.listDriversName(name);
+                break;
             }
             case 16: {
                 //List clients by name
                 std::string name;
+                std::cin.ignore(20, '\n');
                 std::cout << "What's the client's name?\n";
-                std::cin >> name;
+                std::getline(std::cin, name);
                 company.listClientsName(name);
 
                 break;
@@ -361,8 +410,12 @@ void Menu::companyMenu() {
             case 17: {
                 //List orders by client
                 int id;
-                std::cout << "What's client id?\n";
-                std::cin >> id;
+                while(true) {
+                    std::cout << "What's client id?\n";
+                    std::cin >> id;
+                    if (!std::cin.fail()) break;
+                    std::cout << "Invalid answer\n";
+                }
                 company.listOrdersClients(id);
                 break;
             }
@@ -370,24 +423,18 @@ void Menu::companyMenu() {
                 stop = true;
                 break;
             }
-            default: {
-
-            }
         }
     }
-
-
 }
 
 void Menu::graphMenu() {
 
-    std::cout << "To choose a option, type the number to which it is assigned\n";
-    std::cout << "1- Add node\n";
-    std::cout << "2- Add edge\n";
-    std::cout << "0- Go back\n";
-
     bool stop = false;
     while(!stop) {
+        std::cout << "\nTo choose a option, type the number to which it is assigned\n";
+        std::cout << "1- Add node\n";
+        std::cout << "2- Add edge\n";
+        std::cout << "0- Go back\n";
         int option;
         while(true) {
             std::cout << "Option:\n";
@@ -400,11 +447,58 @@ void Menu::graphMenu() {
                 int id;
                 double latitude;
                 double longitude;
+                while(true) {
+                    std::cout << "ID:\n";
+                    std::cin >> id;
+                    if (!std::cin.fail()) break;
+                    std::cout << "Invalid answer\n";
+                }
+                while(true) {
+                    std::cout << "Latitude:\n";
+                    std::cin >> latitude;
+                    if (!std::cin.fail()) break;
+                    std::cout << "Invalid answer\n";
+                }
+                while(true) {
+                    std::cout << "Longitude:\n";
+                    std::cin >> longitude;
+                    if (!std::cin.fail()) break;
+                    std::cout << "Invalid answer\n";
+                }
 
-
+                if (!graph.addNode(new Node(NodeInfo(latitude, longitude), id)))
+                    std::cout << "Failed to add Node, a node with such ID already exists\n";
+                break;
             }
             case 2: {
+                int id1, id2;
+                double weight;
 
+                while(true) {
+                    std::cout << "ID1:\n";
+                    std::cin >> id1;
+                    if (!std::cin.fail()) break;
+                    std::cout << "Invalid answer\n";
+                }
+                while(true) {
+                    std::cout << "ID2:\n";
+                    std::cin >> id2;
+                    if (!std::cin.fail()) break;
+                    std::cout << "Invalid answer\n";
+                }
+                while(true) {
+                    std::cout << "Weight:\n";
+                    std::cin >> weight;
+                    if (!std::cin.fail()) break;
+                    std::cout << "Invalid answer\n";
+                }
+                Node* n1 = graph.findNode(id1);
+                Node* n2 = graph.findNode(id2);
+                if (n1 == nullptr || n1 == nullptr) {
+                    std::cout << "Error: such node does not exist\n";
+                    break;
+                }
+                graph.addEdge(n1, n2, weight);
             }
             case 0:{
                 stop = true;
@@ -420,22 +514,20 @@ void Menu::graphMenu() {
 
 }
 
-
 void Menu::orderMenu() {
-
-    std::cout << "To choose a option, type the number to which it is assigned\n";
-    std::cout << "1- Add Order\n";
-    std::cout << "2- Remove Order\n";
-    std::cout << "3- List current orders\n";
-    std::cout << "0- Go back\n";
 
     bool stop = false;
     while(!stop) {
+        std::cout << "\nTo choose a option, type the number to which it is assigned\n";
+        std::cout << "1- Add Order\n";
+        std::cout << "2- Remove Order\n";
+        std::cout << "3- List current orders\n";
+        std::cout << "0- Go back\n";
         int option;
         while(true) {
             std::cout << "Option:\n";
             std::cin >> option;
-            if (!std::cin.fail() && option <= 2 && option >= 0) break;
+            if (!std::cin.fail() && option <= 3 && option >= 0) break;
             std::cout << "Invalid answer\n";
         }
         switch (option) {
@@ -477,15 +569,26 @@ void Menu::orderMenu() {
                 } catch (NodeDoesNotExistException& e) {
                     std::cout << e.getMessage() << std::endl;
                 }
+                try {
+                    if (node1->getInfo().getType() != NONE) throw InvalidNodeException(node1->getId());
+                    if (node2->getInfo().getType() != NONE) throw InvalidNodeException(node2->getId());
+                    node1->getInfo().setType(PICKUP);
+                    node2->getInfo().setType(DELIVERY);
+                } catch (InvalidNodeException& e) {
+                    std::cout << e.getMessage() << std::endl;
+                    break;
+                }
 
                 try {
                     client = company.findClient(c);
                     if (client == nullptr) throw ItemNotFoundException<int>("client", c, __func__);
                 } catch (ItemNotFoundException<int>& e) {
                     std::cout << e.getMessage() << std::endl;
+                    break;
                 }
 
                 company.addOrder(new Order(node1, node2, client, date));
+                break;
             }
             case 2: {
                 int id;

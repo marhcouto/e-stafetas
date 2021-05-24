@@ -206,7 +206,6 @@ void Graph::cleanGraph() {
             // Eliminate edges
             for (auto it1 = n1->adj.begin(); it1 != n1->adj.end() || n1->id == 479437576;) {
                 if ((*it1)->dest->id == (*it)->id) {
-                    std::cout << "GOT HERE\n";
                     delete *it1;
                     it1 = n1->adj.erase(it1);
                     break;
@@ -215,7 +214,6 @@ void Graph::cleanGraph() {
             }
             for (auto it1 = n2->incoming.begin(); it1 != n2->incoming.end() || n2->id == 479437584;) {
                 if ((*it1)->orig->id == (*it)->id) {
-                    std::cout << "GOT HERE\n";
                     delete *it1;
                     it1 = n2->incoming.erase(it1);
                     break;
@@ -237,7 +235,6 @@ void Graph::cleanGraph() {
 // Route Calculation
 
 std::vector<Node*> Graph::getRoute(int initialRange, std::vector<Node *> pickUps, Node* initialNode) {
-    std::cout << "I'm here\n";
     int range = initialRange;
     std::vector<Node*> allNodes;
     std::vector<Node*> res;
@@ -253,14 +250,10 @@ std::vector<Node*> Graph::getRoute(int initialRange, std::vector<Node *> pickUps
     Node* nextNode = initialNode;
     res.push_back(nextNode);
     while (!allNodes.empty()) {
-        std::cout << "ID:" << nextNode->getId() << std::endl;
-        std::cout << "Range:" << range << std::endl;
         double bestDistance = INF;
         int bestIndex;
         int currentIndex = 0;
         for (Node* node : allNodes) {
-            std::cout << "Node IDM:" << node->idM << std::endl;
-            std::cout << "NextNode IDM:" << nextNode->idM << std::endl;
             if (!node->available) {
                 currentIndex++;
                 continue;
@@ -321,8 +314,6 @@ Node* Graph::findNearestRecharge(Node *currentNode) { // A bit rusty
 
 double Graph::bidirectionalDijkstra(int start, int finish) {
 
-    std::cout << "Started Bidirectional\n";
-
     double bestDist = INF;
 
     Node* s = this->findNode(start);
@@ -359,10 +350,8 @@ double Graph::bidirectionalDijkstra(int start, int finish) {
         node1->visited = true;
         node2->visited = true;
 
-        if(node1->dist + node2->distR >= bestDist && found) {
-            std::cout << "Ended bidirectional\n";
+        if(node1->dist + node2->distR >= bestDist && found)
             return bestDist;
-        }
 
         //FRONT
         for (Edge* edge : node1->adj) {
@@ -414,7 +403,6 @@ double Graph::bidirectionalDijkstra(int start, int finish) {
             }
         }
     }
-    std::cout << "Ended bidirectional\n";
 
     return bestDist;
 }
@@ -684,9 +672,17 @@ void Graph::printMatrixes() {
 
 std::vector<int> Graph::multiGetPath(const std::vector<Node *> &nodes) {
     std::vector<int> res;
+    res.push_back(nodes.at(0)->id);
+
     for (unsigned int i = 0; i < nodes.size() - 1; i++) {
-        std::vector<int> tempPath = getShortestPath(nodes.at(i), nodes.at(i + 1));
-        res.insert(res.end(), tempPath.begin(), tempPath.end());
+        std::vector<int> tempPath;
+        if (matrixCalculated)
+            tempPath = getShortestPath(nodes.at(i), nodes.at(i + 1));
+        else {
+            bidirectionalDijkstra(nodes.at(i)->id, nodes.at(i + 1)->id);
+            tempPath = getShortestPathBidirectional(nodes.at(i), nodes.at(i + 1));
+        }
+        res.insert(res.end(), tempPath.begin() + 1, tempPath.end());
     }
     return res;
 }
@@ -696,8 +692,6 @@ std::vector<int> Graph::getShortestPath(Node *n1, Node *n2) {
 
     res.push_back(n1->id);
     int nextI = n1->idM;
-
-    std::cout << ""
 
     while (n2->idM != nextI) {
         nextI = pathsMatrix[nextI][n2->idM];
@@ -738,12 +732,10 @@ std::vector<int> Graph::getShortestPathBidirectional(Node *n1, Node *n2) {
     while(node1->id != n1->id) {
         res.insert(res.begin(), node1->id);
         node1 = node1->path;
-        std::cout << node1->id << " " << node1->way << std::endl;
     }
     while(node2->id != n2->id) {
         res.push_back(node2->id);
         node2 = node2->path;
-        std::cout << node2->id << " " << node2->way << std::endl;
     }
 
     res.insert(res.begin(),n1->id);

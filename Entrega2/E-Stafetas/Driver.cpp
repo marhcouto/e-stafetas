@@ -38,13 +38,20 @@ void Driver::setRoute(const std::vector<int> &route) {
     Driver::route = route;
 }
 
+void Driver::printRoute() {
+    std::cout << "ID:" << id << " Name:" << name << " Route: ";
+    for (int id : route)
+        std::cout << id << " ";
+    std::cout << std::endl;
+}
+
 void Driver::print() {
     std::cout << "ID:" << this->getId() << " Name:" << this->getName();
-    std::cout << "Salary:" << this->getSalary() << std::endl;
+    std::cout << " Salary:" << this->getSalary() << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& os, const Driver& driver) {
-    os << driver.name << "\n" << driver.salary;
+    os << driver.name << "\n" << driver.salary << std::endl;
     return os;
 }
 

@@ -33,7 +33,7 @@ void Vehicle::print() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
-    os << vehicle.licensePlate;
+    os << vehicle.licensePlate << std::endl;
     return os;
 }
 

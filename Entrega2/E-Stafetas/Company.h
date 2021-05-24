@@ -27,6 +27,19 @@ public:
     }
 };
 
+class InvalidNodeException {
+    std::string message;
+public:
+    InvalidNodeException(int id) {
+        std::stringstream ss;
+        ss << "Node " << id << " cannot be chosen for pickup or delivery point\n";
+        message = ss.str();
+    }
+    const string &getMessage() const {
+        return message;
+    }
+};
+
 
 class Company {
     std::vector<Driver*> crew;
@@ -79,7 +92,8 @@ public:
 
 
     void assignOrdersParameters(Graph& graph);
-    void makeRoutes(Graph& graph, std::vector<Order> orders);
+    // void assignCurrentOrders(Graph& graph);
+    void makeRoutes(Graph& graph);
 };
 
 

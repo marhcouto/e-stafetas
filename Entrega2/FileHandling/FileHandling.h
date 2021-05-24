@@ -53,7 +53,7 @@ public:
     static void readFile(std::vector<T*>& v, std::string file);
 
     template <class T>
-    static void writeFile(const std::vector<T>& v, std::string file);
+    static void writeFile(const std::vector<T*>& v, std::string file);
 };
 
 template <class T>
@@ -67,16 +67,17 @@ void FileReader::readFile(std::vector<T*>& v,std::string file) {
         f >> *t;
         v.push_back(t);
     }
+    v.erase(v.end() - 1);
     f.close();
 }
 
 template <class T>
-void FileReader::writeFile(const std::vector<T> &v, std::string file) {
+void FileReader::writeFile(const std::vector<T*> &v, std::string file) {
     ofstream f;
     f.open("../../DatabaseFiles/" + file, std::ofstream::in | std::ofstream::trunc);
     if (f.fail()) throw FailedToOpenFileException(file, __func__);
 
-    for (T t : v)
+    for (T* t : v)
         f << *t;
     f.close();
 }

@@ -102,12 +102,12 @@ Bidirectional Dijkstra's algorithm is one of the fastest algorithms when it come
 
 \subsection{A* Algorithms}
 \subsubsection{Description and Analysis}
-The first time a A* Algorithm came up was in \textit{Shakey Project}, project of the first general purpose mobile robot capable of reason about is own actions. In an A* (pronounced A-star) Search Algorithm, the 'level' of a node in a graph becomes a sum of two different characteristics. For instance, applied to this problem, the distance a node is from the origin in the search algorithm is substituted for the sum of:
+The first time a A* Algorithm came up was in \textit{Shakey Project}, project of the first general purpose mobile robot capable of reasoning about is own actions. In an A* (pronounced A-star) Search Algorithm, the 'level' of a node in a graph becomes a sum of two different characteristics. For instance, applied to this problem, the distance a node is from the origin in the search algorithm is substituted for the sum of:
 \begin{itemize}
     \item $d_{sv}$ - actual distance to the origin
     \item $\pi_{nt}$ - estimated guess of the distance to the goal node (heuristic)
 \end{itemize}
-The reliability of this technique depends on the efficacy of the heuristic. In this case, because the weight of edges is distance in km, the efficacy is great if we assume $\pi$ to be the euclidean distance. This algorithm can be implemented into both Bidirectional and normal Dijkstra's.
+The reliability of this technique depends on the efficacy of the heuristic. In this case, because the weight of edges is distance in meters, the efficacy is great if we assume $\pi$ to be the euclidean distance. This algorithm can be implemented into both Bidirectional and normal Dijkstra's.
 \begin{itemize}
     \item \textbf{Upside} - Speeds up the process immensely
     \item \textbf{Downside} - The algorithm does not absolutely guarantee the best solution.

@@ -190,8 +190,8 @@ TEST(Algorithms, ShortestPathBidi) {
 
     Node* n1 = myGraph.findNode(9);
     Node* n2 = myGraph.findNode(3);
-    if (n1 == nullptr) std::cout << "OH FUCK\n";
-    if (n2 == nullptr) std::cout << "OH FUCK\n";
+    ASSERT_FALSE(n1 == nullptr);
+    ASSERT_FALSE(n2 == nullptr);
 
     std::vector<int> path = myGraph.getShortestPathBidirectional(n1, n2);
 
@@ -256,18 +256,18 @@ TEST(Algorithms, RouteCalculation) {
     nodes.push_back(myGraph.findNode(384));
     nodes.push_back(myGraph.findNode(1409));
 
-    std::cout << myGraph.bidirectionalDijkstra(3,9) << std::endl;
+    myGraph.bidirectionalDijkstra(3,9);
 
     std::vector<Node*> route = myGraph.getRoute(10000, nodes, myGraph.findNode(16));
-    for (Node* node : route)
-        std::cout << node->getId() << std::endl;
 
-    std::cout << "Calculate Path\n";
+    for (unsigned int i = 0; i < route.size(); i++)
+        std::cout << route[i]->getId() << " ";
+
+    std::cout << "\nCalculate Path\n";
 
     std::vector<int> path = myGraph.multiGetPath(route);
     for (int id : path)
-        std::cout << id << std::endl;
-
+        std::cout << id << "->";
 }
 
 

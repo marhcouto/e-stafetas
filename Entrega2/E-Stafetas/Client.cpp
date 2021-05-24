@@ -35,7 +35,7 @@ void Client::print() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Client& client) {
-    os << client.name;
+    os << client.name << std::endl;
     return os;
 }
 

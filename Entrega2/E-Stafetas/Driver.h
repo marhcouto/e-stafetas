@@ -28,6 +28,7 @@ public:
     void setSalary(float salary);
 
     void print();
+    void printRoute();
 
     friend std::ostream& operator<<(std::ostream& os, const Driver& driver);
     friend std::istream& operator>>(std::istream& is, Driver& driver);
