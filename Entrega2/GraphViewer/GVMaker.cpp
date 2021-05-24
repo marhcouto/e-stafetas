@@ -1,19 +1,14 @@
 //
-// Created by marhc on 13/05/2021.
+// Created by marhc on 21/05/2021.
 //
 
-#ifndef ENTREGA2_GVMAKER_H
-#define ENTREGA2_GVMAKER_H
+#include "GVMaker.h"
 
-#include "graphviewer.h"
-#include "Algorithms/Graph.h"
-#include "sstream"
 
-// To check the graph's state
-void graphViewerMaker(Graph graph) {
+
+GVMaker::GVMaker(Graph graph) {
 
     int counterID = 0;
-    GraphViewer gv;
 
     gv.setCenter(sf::Vector2f(1000, 1000));
 
@@ -25,13 +20,22 @@ void graphViewerMaker(Graph graph) {
         id1 = node->getId();
         if (!node->getVisited()) {
             GraphViewer::Node& node1 = gv.addNode(node->getId(),sf::Vector2f((long) node->getInfo().getLatitude(), (long) node->getInfo().getLongitude()));
+            if (node->getInfo().getType() == GARAGE) {
+                node1.setColor(GraphViewer::BLUE);
+                node1.setLabel("G");
+                node1.setSize(50.0);
+            } else if (node->getInfo().getType() == RECHARGE) {
+                node1.setColor(GraphViewer::GREEN);
+                node1.setLabel("R");
+                node1.setSize(30.0);
+            }
             node->setVisited(true);
         }
         for (Edge* edge : node->getAdj()) {
             id2 = edge->getDest()->getId();
             if (!edge->getDest()->getVisited()) {
                 GraphViewer::Node &node2 = gv.addNode(edge->getDest()->getId(),sf::Vector2f(edge->getDest()->getInfo().getLatitude(),
-                                                                   edge->getDest()->getInfo().getLongitude()));
+                                                                                            edge->getDest()->getInfo().getLongitude()));
                 edge->getDest()->setVisited(true);
             }
             gv.addEdge(counterID, gv.getNode(id1), gv.getNode(id2), GraphViewer::Edge::EdgeType::DIRECTED);
@@ -41,9 +45,9 @@ void graphViewerMaker(Graph graph) {
 
     for (Node* node : graph.getNodeSet())
         node->setVisited(false);
+}
 
+void GVMaker::display() {
     gv.createWindow();
     gv.join();
 }
-
-#endif //ENTREGA2_GVMAKER_H

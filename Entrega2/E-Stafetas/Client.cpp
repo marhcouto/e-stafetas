@@ -30,6 +30,10 @@ void Client::incrementOrders() {
     this->noOrders++;
 }
 
+void Client::print() {
+    std::cout << "ID:" << this->getId() << " Name:" << this->getName() << " Number of orders:" << this->getNoOrders() << std::endl;
+}
+
 std::ostream& operator<<(std::ostream& os, const Client& client) {
     os << client.name;
     return os;

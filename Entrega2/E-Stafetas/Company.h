@@ -19,7 +19,7 @@ class ItemNotFoundException {
 public:
     ItemNotFoundException(std::string type, T data, std::string funcName) {
         std::stringstream ss;
-        ss << "Error in " << funcName << ": " << data << " " << type << " was not found";
+        ss << "Error in " << funcName << ": " << type << " " << data << " was not found";
         message = ss.str();
     }
     const string &getMessage() const {
@@ -27,13 +27,17 @@ public:
     }
 };
 
+
 class Company {
     std::vector<Driver*> crew;
     std::vector<Order*> orders;
     std::vector<Vehicle*> fleet;
     std::vector<Client*> clients;
+    std::vector<Order*> currentOrders;
+    Node* garage;
 public:
-    Company(std::vector<Driver*> d, std::vector<Client*> c, std::vector<Order*> o, std::vector<Vehicle*> v);
+    Company();
+    Company(std::vector<Driver*> d, std::vector<Client*> c, std::vector<Order*> o, std::vector<Vehicle*> v, Node* garage);
 
     const vector<Driver*> &getCrew() const;
     void setCrew(const vector<Driver*> &crew);
@@ -43,16 +47,39 @@ public:
     void setFleet(const vector<Vehicle*> &fleet);
     const vector<Client*> &getClients() const;
     void setClients(const vector<Client*> &clients);
+    const vector<Order *> &getCurrentOrders() const;
+    void setCurrentOrders(const vector<Order *> &currentOrders);
+    Node *getGarage() const;
+    void setGarage(Node *garage);
 
     Client* findClient(int id);
-    Client* findClient(std::string name);
     Order* findOrder(int id);
     Vehicle* findVehicle(std::string licensePlate);
-    Driver* findDriver(std::string name);
     Driver* findDriver(int id);
 
+    bool addVehicle(Vehicle* vehicle);
+    void addDriver(Driver* driver);
+    void addOrder(Order* order);
+    void addClient(Client* client);
 
-    void assignOrdersParameters(Graph graph);
+    bool removeVehicle(std::string licensePlate);
+    bool removeClient(int id);
+    bool removeOldOrder(int id);
+    bool removeDriver(int id);
+    bool removeCurrentOrder(int id);
+
+    void listClientsName(std::string name);
+    void listDriversName(std::string name);
+    void listDrivers();
+    void listPastOrders();
+    void listCurrentOrders();
+    void listVehicles();
+    void listClients();
+    void listOrdersClients(int id);
+
+
+    void assignOrdersParameters(Graph& graph);
+    void makeRoutes(Graph& graph, std::vector<Order> orders);
 };
 
 

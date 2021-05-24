@@ -26,6 +26,8 @@ public:
 
     void incrementOrders();
 
+    void print();
+
     friend std::ostream& operator<<(std::ostream& os, const Client& client);
     friend std::istream& operator>>(std::istream& is, Client& client);
 };

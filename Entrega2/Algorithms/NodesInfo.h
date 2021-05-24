@@ -28,7 +28,7 @@ public:
         return type;
     }
     void setType(interest type) {
-        NodeInfo::type = type;
+        this->type = type;
     }
 
     // Euclidian distance

@@ -44,11 +44,11 @@ TEST(Interface, resolveOrders) {
     orders.push_back(o2);
     orders.push_back(o3);
 
-    Company company(drivers, clients, orders, vehicles);
+    Company company(drivers, clients, orders, vehicles, nullptr);
 
     ASSERT_NO_THROW(company.assignOrdersParameters(graph));
 
-    /*for (const auto& order : company.getOrders()) {
+    for (const auto& order : company.getOrders()) {
         std::cout << *order << std::endl;
-    }*/
+    }
 }

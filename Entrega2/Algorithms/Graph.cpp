@@ -8,17 +8,10 @@
 
 Node::Node(NodeInfo in, int id): info(in), id(id) {}
 
-/*template <class T>
-Node::~Node() {
-    for (typename std::vector<Edge*>::iterator iterator = adj.begin(); iterator != adj.end();) {
-        // delete *iterator;
-        iterator = adj.erase(iterator);
-    }
-}*/
-
 Edge *Node::addEdge(Node *d, double w) {
     Edge *e = new Edge(this, d, w);
     adj.push_back(e);
+    d->incoming.push_back(e);
     return e;
 }
 
@@ -26,12 +19,18 @@ void Node::addEdge(Edge* edge) {
     adj.push_back(edge);
 }
 
+void Node::addIncoming(Edge *edge) {
+    incoming.push_back(edge);
+}
+
 bool Node::operator<(const Node & Node) const {
+    if (this->way == 2 && Node.way == 2)
+        return this->distR < Node.distR;
     return this->dist < Node.dist;
 }
 
-NodeInfo Node::getInfo() const {
-    return this->info;
+NodeInfo& Node::getInfo() const {
+    return (NodeInfo &) this->info;
 }
 
 double Node::getDist() const {
@@ -46,8 +45,20 @@ const Node *Node::getPath() const {
     return this->path;
 }
 
+const vector<Edge *> &Node::getIncoming() const {
+    return incoming;
+}
+
 const std::vector<Edge *> &Node::getAdj() const {
     return adj;
+}
+
+Node *Node::getPair() const {
+    return pair;
+}
+
+void Node::setPair(Node *pair) {
+    this->pair = pair;
 }
 
 void Node::setVisited(bool visited) {
@@ -102,6 +113,14 @@ std::vector<Node *> Graph::getNodeSet() const {
     return this->nodeSet;
 }
 
+bool Graph::addNode(Node *node) {
+    Node *n = findNode(node->id);
+    if (n != nullptr)
+        return false;
+    nodeSet.push_back(node);
+    return true;
+}
+
 Node* Graph::addNode(const NodeInfo &in, int id) {
     Node *v = findNode(id);
     if (v != nullptr)
@@ -113,6 +132,7 @@ Node* Graph::addNode(const NodeInfo &in, int id) {
 
 Edge* Graph::addEdge(Node* node1, Node* node2, double w) {
     Edge *e = new Edge(node1, node2, w);
+    node2->addIncoming(e);
     node1->addEdge(e);
     return e;
 }
@@ -125,7 +145,16 @@ Edge* Graph::addEdge(int id1, int id2, double w) {
 
     Edge *e = new Edge(s, d, w);
     s->addEdge(e);
+    d->addIncoming(e);
     return e;
+}
+
+const vector<std::vector<double>> &Graph::getDistanceMatrix() const {
+    return distanceMatrix;
+}
+
+const vector<std::vector<int>> &Graph::getPathsMatrix() const {
+    return pathsMatrix;
 }
 
 Node* Graph::findNode(int id) const {
@@ -144,8 +173,8 @@ Node* Graph::findNodeMatrixId(int idM) const {
 
 Graph::~Graph() {
     for (auto v : nodeSet) {
-        for (auto e : v->adj)
-            delete e;
+        for (auto edge : v->adj)
+            delete edge;
         delete v;
     }
 }
@@ -153,9 +182,146 @@ Graph::~Graph() {
 
 // A L G O R I T H M S
 
+// Pre processing
+
+void Graph::cleanGraph() {
+    int i = 0;
+    for (auto it = nodeSet.begin(); it != nodeSet.end();) {
+        std::cout << ++i << std::endl;
+        if ((*it)->adj.size() == 1 && (*it)->incoming.size() == 1) {
+            double w1, w2;
+            Node* n1, *n2;
+            w1 = (*it)->adj.at(0)->weight;
+            w2 = (*it)->incoming.at(0)->weight;
+            n1 = (*it)->incoming.at(0)->orig;
+            n2 = (*it)->adj.at(0)->dest;
+
+            // Edge to itself
+            if (n1->id == (*it)->id || n2->id == (*it)->id) {
+                delete (*it);
+                it = nodeSet.erase(it);
+                continue;
+            }
+
+            // Eliminate edges
+            for (auto it1 = n1->adj.begin(); it1 != n1->adj.end() || n1->id == 479437576;) {
+                if ((*it1)->dest->id == (*it)->id) {
+                    std::cout << "GOT HERE\n";
+                    delete *it1;
+                    it1 = n1->adj.erase(it1);
+                    break;
+                }
+                else it1++;
+            }
+            for (auto it1 = n2->incoming.begin(); it1 != n2->incoming.end() || n2->id == 479437584;) {
+                if ((*it1)->orig->id == (*it)->id) {
+                    std::cout << "GOT HERE\n";
+                    delete *it1;
+                    it1 = n2->incoming.erase(it1);
+                    break;
+                }
+                else it1++;
+            }
+
+            // New edge
+            n1->addEdge(n2, w1 + w2);
+
+            // Erase node
+            delete (*it);
+            it = nodeSet.erase(it);
+        }
+        else it++;
+    }
+}
+
+// Route Calculation
+
+std::vector<Node*> Graph::getRoute(int initialRange, std::vector<Node *> pickUps, Node* initialNode) {
+    std::cout << "I'm here\n";
+    int range = initialRange;
+    std::vector<Node*> allNodes;
+    std::vector<Node*> res;
+
+    for (Node* node : pickUps) {
+        if (node->getInfo().getType() != PICKUP) std::cout << "NOT A PICKUP\n";
+        node->available = true;
+        node->pair->available = false;
+        allNodes.push_back(node);
+        allNodes.push_back(node->pair);
+    }
+
+    Node* nextNode = initialNode;
+    res.push_back(nextNode);
+    while (!allNodes.empty()) {
+        std::cout << "ID:" << nextNode->getId() << std::endl;
+        std::cout << "Range:" << range << std::endl;
+        double bestDistance = INF;
+        int bestIndex;
+        int currentIndex = 0;
+        for (Node* node : allNodes) {
+            std::cout << "Node IDM:" << node->idM << std::endl;
+            std::cout << "NextNode IDM:" << nextNode->idM << std::endl;
+            if (!node->available) {
+                currentIndex++;
+                continue;
+            }
+            double possibleDistance;
+            if (this->matrixCalculated) {
+                possibleDistance = distanceMatrix[nextNode->idM][node->idM];
+                if (possibleDistance < bestDistance) {
+                    bestDistance = possibleDistance;
+                    bestIndex = currentIndex;
+                }
+            } else {
+                possibleDistance = bidirectionalDijkstra(nextNode->id, node->id);
+                if (possibleDistance < bestDistance) {
+                    bestDistance = possibleDistance;
+                    bestIndex = currentIndex;
+                }
+            }
+            currentIndex++;
+        }
+        if (bestDistance > range) {
+            nextNode = findNearestRecharge(nextNode);
+            range = initialRange;
+        } else {
+            range -= bestDistance;
+            nextNode = allNodes[bestIndex];
+            nextNode->pair->available = true;
+            allNodes.erase(allNodes.begin() + bestIndex);
+        }
+        res.push_back(nextNode);
+    }
+    res.push_back(initialNode);
+    return res;
+}
+
+Node* Graph::findNearestRecharge(Node *currentNode) { // A bit rusty
+
+    for (Node* node : nodeSet)
+        node->visited = false;
+
+    std::queue<Node*> q;
+    q.push(currentNode);
+    while (true) {
+        Node* node = q.front();
+        node->visited = true;
+        q.pop();
+        for (Edge* edge : node->adj) {
+            if (edge->dest->getInfo().getType() == RECHARGE) {
+                return edge->dest;
+            } else if (!edge->dest->visited) {
+                q.push(edge->dest);
+            }
+        }
+    }
+}
+
 // Shortest Path
 
 double Graph::bidirectionalDijkstra(int start, int finish) {
+
+    std::cout << "Started Bidirectional\n";
 
     double bestDist = INF;
 
@@ -184,23 +350,32 @@ double Graph::bidirectionalDijkstra(int start, int finish) {
     nodeF.insert(s);
     nodeB.insert(p);
 
+    bool found = false;
+
     while(!nodeF.empty() && !nodeB.empty()) {
         Node* node1 = nodeF.extractMin();
         Node* node2 = nodeB.extractMin();
+
         node1->visited = true;
         node2->visited = true;
 
-        if(node1->dist + node2->dist >= bestDist)
+        if(node1->dist + node2->distR >= bestDist && found) {
+            std::cout << "Ended bidirectional\n";
             return bestDist;
+        }
 
         //FRONT
         for (Edge* edge : node1->adj) {
             double oldDist = edge->dest->dist;
-            if (bestDist > edge->dest->distR + edge->weight + node1->dist && !edge->dest->visited && edge->dest->way == 2) {
+            if (bestDist > edge->dest->distR + edge->weight + node1->dist && edge->dest->way == 2) {
                 bestDist = edge->dest->distR + edge->weight + node1->dist;
+                this->bidiCross1 = node1;
+                this->bidiCross2 = edge->dest;
+                found = true;
             }
-            else {
+            else if (!edge->dest->visited){
                 edge->dest->way = 1;
+
                 //MiniDijkstraStep
                 if (edge->dest->dist > node1->dist + edge->weight) {
                     edge->dest->dist = node1->dist + edge->weight;
@@ -215,32 +390,40 @@ double Graph::bidirectionalDijkstra(int start, int finish) {
         }
 
         //BACK
-        for (Edge* edge : node2->adj) {
-            double oldDist = edge->dest->dist;
-            if (bestDist > node2->distR + edge->weight + edge->dest->dist && !edge->dest->visited && edge->dest->way == 1) {
-
-                bestDist = node2->distR + edge->weight + edge->dest->dist;
+        for (Edge* edge : node2->incoming) {
+            double oldDist = edge->orig->distR;
+            if (bestDist > node2->distR + edge->weight + edge->orig->dist && edge->orig->way == 1) {
+                bestDist = node2->distR + edge->weight + edge->orig->dist;
+                this->bidiCross1 = edge->orig;
+                this->bidiCross2 = node2;
+                found = true;
             }
-            else {
-                edge->dest->way = 2;
+            else if (!edge->orig->visited){
+                edge->orig->way = 2;
 
                 //MiniDijkstraStep
-                if (edge->dest->dist > node2->dist + edge->weight) {
-                    edge->dest->dist = node2->dist + edge->weight;
-                    edge->dest->path = node2;
+                if (edge->orig->distR > node2->distR + edge->weight) {
+                    edge->orig->distR = node2->distR + edge->weight;
+                    edge->orig->path = node2;
 
                     if(oldDist == INF)
-                        nodeB.insert(edge->dest);
+                        nodeB.insert(edge->orig);
                     else
-                        nodeB.decreaseKey(edge->dest);
+                        nodeB.decreaseKey(edge->orig);
                 }
             }
         }
     }
-    return INF;
+    std::cout << "Ended bidirectional\n";
+
+    return bestDist;
 }
 
 void Graph::dijkstraMulti() {
+
+    this->matrixCalculated = true;
+
+    std::cout << "Started Multi Dijkstra's\n";
 
     for (unsigned int i = 0; i < nodeSet.size(); i++) {
         std::vector<double> temp1;
@@ -259,8 +442,12 @@ void Graph::dijkstraMulti() {
             pathsMatrix[i][j] = INTINF;
         }
     }
+    std::cout << "I am still working\n";
 
     for (Node* node : nodeSet) {
+
+        std::cout << "Another one:";
+        std::cout << node->id << std::endl;
 
         for (Node* n : nodeSet) {
             n->visited = false;
@@ -292,6 +479,7 @@ void Graph::dijkstraMulti() {
         }
         updatePaths(node);
     }
+    std::cout << "Finished Multi Dijkstra's\n";
 }
 
 void Graph::updatePaths(Node* origin) {
@@ -319,6 +507,8 @@ void Graph::updatePaths(Node* origin) {
 }
 
 void Graph::floydWarshallShortestPath() { //Makes matrix with all paths
+
+    std::cout << "Started Floyd Warhsall's\n";
 
     for (unsigned int i = 0; i < nodeSet.size(); i++) {
         std::vector<double> temp1;
@@ -349,11 +539,14 @@ void Graph::floydWarshallShortestPath() { //Makes matrix with all paths
             }
         }
     }
+    std::cout << "Finished Floyd Warhsall's\n";
 }
 
 // Connectivity
 
 void Graph::tarjan() {
+    std::cout << "Started Tarjan's\n";
+
     std::stack<Node*> st;
 
     for (Node* n : nodeSet) {
@@ -392,6 +585,7 @@ int Graph::dfsTarjan(Node *node, int& counter, std::stack<Node*>& st) {
         st.pop();
     }
     return node->low;
+    std::cout << "Finished tarjan's\n";
 }
 
 // Clustering
@@ -426,7 +620,11 @@ double Graph::getSetDistances(std::vector<Node*> v1, std::vector<Node*> v2) {
     double bestDistance = INF;
     for (Node* n1 : v1) {
         for (Node* n2 : v2) {
-            double possibleDistance = (distanceMatrix[n1->getIDM()][n2->getIDM()] + distanceMatrix[n2->getIDM()][n1->getIDM()]) / 2;
+            double possibleDistance;
+            if (this->matrixCalculated)
+                possibleDistance = (distanceMatrix[n1->getIDM()][n2->getIDM()] + distanceMatrix[n2->getIDM()][n1->getIDM()]) / 2;
+            else
+                possibleDistance = (bidirectionalDijkstra(n1->getId(), n2->getId()) + bidirectionalDijkstra(n2->getId(), n1->getId())) / 2;
             if (possibleDistance < bestDistance)
                 bestDistance = possibleDistance;
         }
@@ -451,8 +649,18 @@ void Graph::eliminateInaccessible(int id) {
             delete *iterator;
             iterator = nodeSet.erase(iterator);
         }
-        else
+        else {
+            for (auto it2 = (*iterator)->adj.begin(); it2 != (*iterator)->adj.end();) {
+                if ((*it2)->dest->low != node->low) {
+                    delete *it2;
+                    it2 = (*iterator)->adj.erase(it2);
+                }
+                else {
+                    it2++;
+                }
+            }
             iterator++;
+        }
     }
 }
 
@@ -474,6 +682,33 @@ void Graph::printMatrixes() {
     }
 }
 
+std::vector<int> Graph::multiGetPath(const std::vector<Node *> &nodes) {
+    std::vector<int> res;
+    for (unsigned int i = 0; i < nodes.size() - 1; i++) {
+        std::vector<int> tempPath = getShortestPath(nodes.at(i), nodes.at(i + 1));
+        res.insert(res.end(), tempPath.begin(), tempPath.end());
+    }
+    return res;
+}
+
+std::vector<int> Graph::getShortestPath(Node *n1, Node *n2) {
+    std::vector<int> res;
+
+    res.push_back(n1->id);
+    int nextI = n1->idM;
+
+    std::cout << ""
+
+    while (n2->idM != nextI) {
+        nextI = pathsMatrix[nextI][n2->idM];
+        Node* node = findNodeMatrixId(nextI);
+        if (node == nullptr) throw NodeDoesNotExistException(nextI, __func__, true);
+        res.push_back(node->id);
+    }
+
+    return res;
+}
+
 std::vector<int> Graph::getShortestPath(int s, int d) const{ //Calculate the paths
     std::vector<int> res;
     Node* originV = this->findNode(s);
@@ -490,6 +725,29 @@ std::vector<int> Graph::getShortestPath(int s, int d) const{ //Calculate the pat
         if (node == nullptr) throw NodeDoesNotExistException(nextI, __func__, true);
         res.push_back(node->id);
     }
+
+    return res;
+}
+
+std::vector<int> Graph::getShortestPathBidirectional(Node *n1, Node *n2) {
+    std::vector<int> res;
+
+    Node* node1 = this->bidiCross1;
+    Node* node2 = this->bidiCross2;
+
+    while(node1->id != n1->id) {
+        res.insert(res.begin(), node1->id);
+        node1 = node1->path;
+        std::cout << node1->id << " " << node1->way << std::endl;
+    }
+    while(node2->id != n2->id) {
+        res.push_back(node2->id);
+        node2 = node2->path;
+        std::cout << node2->id << " " << node2->way << std::endl;
+    }
+
+    res.insert(res.begin(),n1->id);
+    res.push_back(n2->id);
 
     return res;
 }

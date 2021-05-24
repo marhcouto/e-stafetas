@@ -49,6 +49,11 @@ void Order::setClient(Client *client) {
     Order::client = client;
 }
 
+void Order::print() {
+    std::cout << "ID:" << this->getOrderId() << " Client ID:" << this->getClient()->getId() << " Pickup ID:" << this->getPickUp()->getId() << " Delivery ID:"
+              << this->getDelivery()->getId() << std::endl;
+}
+
 std::ostream& operator<<(std::ostream& os, const Order& order) {
     os << order.pickUp->getId() << " " << order.delivery->getId() << " " << order.client->getId() << " " << order.getDate();
     return os;

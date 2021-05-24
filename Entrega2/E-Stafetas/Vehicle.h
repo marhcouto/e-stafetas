@@ -5,6 +5,7 @@
 #ifndef ENTREGA2_VEHICLE_H
 #define ENTREGA2_VEHICLE_H
 
+#include <iostream>
 #include <string>
 
 class Vehicle {
@@ -19,6 +20,8 @@ public:
     double getRange() const;
     double getMaxRange() const;
     void setRange(double range);
+
+    void print();
 
     friend std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle);
     friend std::istream& operator>>(std::istream& is, Vehicle& vehicle);

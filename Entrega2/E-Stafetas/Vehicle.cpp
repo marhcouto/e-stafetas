@@ -28,6 +28,10 @@ void Vehicle::setRange(double range) {
     this->range = range;
 }
 
+void Vehicle::print() {
+    std::cout << "License Plate:" << this->getLicensePlate() << " MaxRange:" << this->getMaxRange() << std::endl;
+}
+
 std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
     os << vehicle.licensePlate;
     return os;

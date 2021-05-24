@@ -10,6 +10,8 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include <time.h>
+#include "../E-Stafetas/Order.h"
 #include "../Algorithms/Graph.h"
 #include "../Algorithms/NodesInfo.h"
 
@@ -43,6 +45,9 @@ public:
 class FileReader {
 public:
     static void readFileToGraph(Graph& graph, std::string edgesFile, std::string nodesFile);
+    static void readTagsFile(Graph& graph, std::string tagsFile);
+    static void writeGraphToFile(const Graph& graph, std::string edgesFile, std::string nodesFile); // Only used in development
+    static void randomTagMaker(const Graph& graph, std::string tagsFile); // Only used in development
 
     template <class T>
     static void readFile(std::vector<T*>& v, std::string file);

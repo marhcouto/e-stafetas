@@ -6,8 +6,8 @@
             \WHILE{$ size(SS) > n $}
                 \STATE{$ bestDist \gets \infty $}
                 \STATE{$ bestDistPointA \gets nil $}
-                \STATE{$ bestDistPointB \gets nil $}
-                \FORALL{$ p \in SS $} \Comment{v and p are sets}
+                \STATE{$ bestDistPointB \gets nil $} \Comment{v and p are sets}
+                \FORALL{$ p \in SS $} 
                     \FORALL{$ v \in SS $}
                         \IF{$ v \neq p $ $ \AND $ $ dist(v, p) < bestDist $}
                             \STATE{$ bestDist \gets dist(v, p) $}
@@ -16,7 +16,7 @@
                         \ENDIF
                     \ENDFOR
                 \ENDFOR
-                \STATE{$ join(bestDistPoinA, bestDistPointB) $}
+                \STATE{$ join(bestDistPointA, bestDistPointB) $}
             \ENDWHILE
         \EndFunction
     \end{algorithmic}

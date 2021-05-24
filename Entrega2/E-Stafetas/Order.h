@@ -36,6 +36,8 @@ public:
     void setPickUp(Node *pickUp);
     void setDelivery(Node *delivery);
 
+    void print();
+
     friend std::ostream& operator<<(std::ostream& os, const Order& order);
     friend std::istream& operator>>(std::istream& is, Order& order);
 };

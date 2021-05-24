@@ -7,27 +7,27 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Driver {
     std::string name;
+    std::vector<int> route;
     int id;
-    int age;
-    int yearsExperience;
     float salary;
 public:
     static int currentId;
 
     Driver();
-    Driver(std::string name, int age, int exp, float salary);
+    Driver(std::string name, float salary);
 
     std::string getName() const;
-    int getAge() const;
-    int getYearsExperience() const;
     int getId() const;
     float getSalary() const;
-    void setAge(int age);
-    void setYearsExperience(int yearsExperience);
+    const std::vector<int> &getRoute() const;
+    void setRoute(const std::vector<int> &route);
     void setSalary(float salary);
+
+    void print();
 
     friend std::ostream& operator<<(std::ostream& os, const Driver& driver);
     friend std::istream& operator>>(std::istream& is, Driver& driver);
