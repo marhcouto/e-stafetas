@@ -2,8 +2,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ### Description
-Project delopped in javascript - WebGL. The project represents a sea-like environment, where multiple techniques of computer graphics were applied to build the different objects, control animations, shadows, lighting, textures and others.
-The project also features a multitude of functionalities in controlling the movement and animations of a fish.
+Project delopped in c++. The project has a terminal-interface and allows for the calculation and viewing of routes for a delivery system of electrical vehicles.
 
 ### Dependencies and Instructions
 #### Libraries:
@@ -22,8 +21,6 @@ The project also features a multitude of functionalities in controlling the move
 - Tests executable and test.cpp are not meant to be run and compiled respectively, as there purpose was only for the development of the project
 
 ### Results
-The project was very ambicious, yet the second part was missing certain parts, as well as having some small bugs and not having the same refinment as planned. The grade is justified by the participation disparities (something like 90-10-0).
-
 **GRADE:** 18.6
 
 ### Authors
