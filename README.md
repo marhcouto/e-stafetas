@@ -1,4 +1,5 @@
-# E-Stafetas - Sistema de entregas a veículos elétricos
+# E-Stafetas - Electrical Vehicle Sytem
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ### Description
 Project delopped in javascript - WebGL. The project represents a sea-like environment, where multiple techniques of computer graphics were applied to build the different objects, control animations, shadows, lighting, textures and others.
